@@ -9,28 +9,44 @@ import com.lsurvila.callmonitortask.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: CallMonitorViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val httpServer = HttpServer()
-        val server = CallMonitorServer(httpServer)
+        val httpServer = CallMonitorServer()
+        val server = CallMonitorServerManager(httpServer)
         val model: CallMonitorViewModel by viewModels {
             CallMonitorViewModelFactory(server)
         }
-        model.serverLiveData.observe(this, { message: String ->
+        viewModel = model
+        viewModel.serverLiveData.observe(this, { message: String ->
             binding.messageView.text = message
         })
 
-        restartServer(model)
         binding.restartButton.setOnClickListener {
-            restartServer(model)
+            stopServer()
+            startServer()
         }
     }
 
-    private fun restartServer(model: CallMonitorViewModel) {
-        model.restartServer(NetworkUtil.getWifiIpAddress(this))
+    override fun onStart() {
+        startServer()
+        super.onStart()
+    }
+
+    private fun startServer() {
+        viewModel.startServer(NetworkUtil.getWifiIpAddress(this))
+    }
+
+    override fun onStop() {
+        stopServer()
+        super.onStop()
+    }
+
+    private fun stopServer() {
+        viewModel.stopServer()
     }
 }

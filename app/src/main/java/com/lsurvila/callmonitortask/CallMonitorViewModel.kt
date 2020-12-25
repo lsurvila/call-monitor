@@ -2,22 +2,26 @@ package com.lsurvila.callmonitortask
 
 import androidx.lifecycle.*
 
-class CallMonitorViewModel(server: CallMonitorServer) : ViewModel() {
+class CallMonitorViewModel(private val serverManager: CallMonitorServerManager) : ViewModel() {
 
-    private val restartTrigger = MutableLiveData<Int> ()
+    private val serverStartTrigger = MutableLiveData<Int>()
 
-    fun restartServer(wifiIpAddress: Int) {
-        restartTrigger.postValue(wifiIpAddress)
+    fun startServer(wifiIpAddress: Int) {
+        serverStartTrigger.postValue(wifiIpAddress)
     }
 
-    val serverLiveData = restartTrigger.switchMap { server.start(it).asLiveData() }
+    fun stopServer() {
+        serverManager.stop()
+    }
+
+    val serverLiveData = serverStartTrigger.switchMap { serverManager.start(it).asLiveData() }
 }
 
-class CallMonitorViewModelFactory(private val server: CallMonitorServer) : ViewModelProvider.Factory {
+class CallMonitorViewModelFactory(private val serverManager: CallMonitorServerManager) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CallMonitorViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CallMonitorViewModel(server) as T
+            return CallMonitorViewModel(serverManager) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
