@@ -4,7 +4,13 @@ import androidx.lifecycle.*
 
 class CallMonitorViewModel(server: CallMonitorServer) : ViewModel() {
 
-    val serverLiveData: LiveData<String> = server.start().asLiveData()
+    private val restartTrigger = MutableLiveData<Int> ()
+
+    fun restartServer(wifiIpAddress: Int) {
+        restartTrigger.postValue(wifiIpAddress)
+    }
+
+    val serverLiveData = restartTrigger.switchMap { server.start(it).asLiveData() }
 }
 
 class CallMonitorViewModelFactory(private val server: CallMonitorServer) : ViewModelProvider.Factory {

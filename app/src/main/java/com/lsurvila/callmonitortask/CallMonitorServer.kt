@@ -1,26 +1,40 @@
 package com.lsurvila.callmonitortask
 
 import fi.iki.elonen.NanoHTTPD
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import java.math.BigInteger
 import java.net.InetAddress
 import java.nio.ByteOrder
 
 
-private const val PORT = 12345
+class CallMonitorServer(private val server: HttpServer) {
 
-class CallMonitorServer(private val wifiIpAddress: Int) {
-
-    fun start(): Flow<String> = flow {
-        try {
-            emit(resolveIpAddress())
-        } catch (e: Exception) {
-            emit("Could not resolve Wifi address")
+    fun start(wifiIpAddress: Int): Flow<String> = flow {
+        if (server.isAlive) {
+            server.stop()
         }
-    }
+        val ipAddress: String?
+        try {
+            ipAddress = resolveIpAddress(wifiIpAddress)
+        } catch (e: Exception) {
+            emit("Failed to resolve Wifi IP address")
+            return@flow
+        }
+        try {
+            @Suppress("BlockingMethodInNonBlockingContext") // taken care by flowOn
+            server.start()
+            if (server.isAlive) {
+                emit("Server started on ${ipAddress}:${server.listeningPort}")
+            } else {
+                throw Exception()
+            }
+        } catch (e: Exception) {
+            emit("Failed to start HTTP server")
+        }
+    }.flowOn(Dispatchers.IO)
 
-    private fun resolveIpAddress(): String {
+    private fun resolveIpAddress(wifiIpAddress: Int): String {
         var ipAddress = wifiIpAddress
         if (ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN) {
             ipAddress = Integer.reverseBytes(wifiIpAddress)
@@ -29,6 +43,8 @@ class CallMonitorServer(private val wifiIpAddress: Int) {
         return InetAddress.getByAddress(ipByteArray).hostAddress
     }
 }
+
+private const val PORT = 12345
 
 class HttpServer : NanoHTTPD(PORT) {
 
