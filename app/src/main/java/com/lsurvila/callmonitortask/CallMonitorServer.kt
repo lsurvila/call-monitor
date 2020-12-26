@@ -33,25 +33,23 @@ class CallMonitorServer : NanoHTTPD(PORT) {
     }
 
     override fun serve(session: IHTTPSession): Response {
-        val uri = session.uri
-        if (uri == "/hello") {
-            val response = "HelloWorld"
-            return newFixedLengthResponse(response)
+        return when(session.uri) {
+            "/${METHOD_STATUS}" -> newFixedLengthResponse(Response.Status.OK, MIME_TYPE_JSON, getStatus())
+            "/" -> newFixedLengthResponse(Response.Status.OK, MIME_TYPE_JSON, getAvailableServices())
+            else -> super.serve(session)
         }
-        return newFixedLengthResponse(Response.Status.OK, MIME_TYPE_JSON, getAvailableServices())
     }
 
     private fun getAvailableServices(): String {
-        return Json.Default
-            .encodeToString(
-                Services(
-                    startTime,
-                    listOf(
-                        mapService(METHOD_STATUS),
-                        mapService(METHOD_LOG)
-                    )
+        return Json.Default.encodeToString(
+            Services(
+                startTime,
+                listOf(
+                    mapService(METHOD_STATUS),
+                    mapService(METHOD_LOG)
                 )
             )
+        )
     }
 
     private fun mapService(method: String) =
@@ -59,6 +57,12 @@ class CallMonitorServer : NanoHTTPD(PORT) {
             METHOD_STATUS,
             NetworkUtil.formatUri(SCHEME_HTTP, ipAddress, listeningPort, method)
         )
+
+    private fun getStatus(): String {
+        return Json.Default.encodeToString(
+            Status(true, "number", "name")
+        )
+    }
 }
 
 private const val METHOD_STATUS = "status"
@@ -69,3 +73,6 @@ data class Services(val start: String, val services: List<Service>)
 
 @Serializable
 data class Service(val name: String, val uri: String)
+
+@Serializable
+data class Status(val ongoing: Boolean, val number: String, val name: String? = null)
