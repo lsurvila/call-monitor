@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.lsurvila.callmonitortask.databinding.ActivityMainBinding
+import com.lsurvila.callmonitortask.util.NetworkUtil
 
 
 class MainActivity : AppCompatActivity() {
@@ -16,10 +17,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val httpServer = CallMonitorServer()
-        val server = CallMonitorServerManager(httpServer)
+        val server = CallMonitorServer()
+        val manager = CallMonitorServerManager(server)
         val model: CallMonitorViewModel by viewModels {
-            CallMonitorViewModelFactory(server)
+            CallMonitorViewModelFactory(manager)
         }
         viewModel = model
         viewModel.serverLiveData.observe(this, { message: String ->
