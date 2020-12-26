@@ -11,10 +11,10 @@ private const val ERROR_HTTP = "Failed to start HTTP server"
 class CallMonitorServerManager(private val server: CallMonitorServer) {
 
     @Suppress("EXPERIMENTAL_API_USAGE") // for actual prod app would use stable api
-    fun start(wifiIpAddress: Int): Flow<String> = flow {
+    fun start(ipAddressInt: Int): Flow<String> = flow {
         val ipAddress: String?
         try {
-            ipAddress = NetworkUtil.ipToHostAddress(wifiIpAddress)
+            ipAddress = NetworkUtil.ipToHostAddress(ipAddressInt)
         } catch (e: Exception) {
             e.printStackTrace()
             emit(ERROR_WIFI)

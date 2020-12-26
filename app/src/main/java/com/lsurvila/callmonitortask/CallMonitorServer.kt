@@ -18,6 +18,8 @@ class CallMonitorServer : NanoHTTPD(PORT) {
     lateinit var address: String
     private lateinit var startTime: String
 
+    private var isOngoingCall = false
+
     fun start(ipAddress: String) {
         super.start()
         this.ipAddress = ipAddress
@@ -60,8 +62,12 @@ class CallMonitorServer : NanoHTTPD(PORT) {
 
     private fun getStatus(): String {
         return Json.Default.encodeToString(
-            Status(true, "number", "name")
+            Status(isOngoingCall, "number", "name")
         )
+    }
+
+    fun setIsOngoingCall(ongoingCall: Boolean) {
+        this.isOngoingCall = ongoingCall
     }
 }
 
