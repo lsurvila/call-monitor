@@ -23,11 +23,11 @@ class CallMonitorServerManager(private val server: CallMonitorServer) {
         try {
             @Suppress("BlockingMethodInNonBlockingContext") // taken care by flowOn
             server.start(ipAddress)
-            if (server.isAlive) {
-                emit("Server started on ${server.address}")
-            } else {
-                throw IOException()
-            }
+//            if (server.isAlive) {
+//                emit("Server started on ${server.address}")
+//            } else {
+//                throw IOException()
+//            }
         } catch (e: Exception) {
             e.printStackTrace()
             emit(ERROR_HTTP)
@@ -35,6 +35,6 @@ class CallMonitorServerManager(private val server: CallMonitorServer) {
     }.flowOn(Dispatchers.IO)
 
     fun stop() {
-        server.stop()
+//        server.stop()
     }
 }
