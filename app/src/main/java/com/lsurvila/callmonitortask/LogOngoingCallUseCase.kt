@@ -4,22 +4,22 @@ import android.util.Log
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.repository.ContactRepository
 import com.lsurvila.callmonitortask.model.Call
-import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
+import com.lsurvila.callmonitortask.service.callmonitor.CallMonitor
 
 class LogOngoingCallUseCase(
-    private val callMonitorService: CallMonitorService,
+    private val callMonitor: CallMonitor,
     private val contactRepository: ContactRepository
 ) {
 
     fun execute(call: Call) {
-        if (callMonitorService.currentState == CallMonitorState.STARTED && call.incomingCall) {
+        if (callMonitor.currentState == CallMonitorState.STARTED && call.incomingCall) {
             call.number?.let {
                 //call.copy(name = contactRepository.get(it).name)
             }
-            callMonitorService.onGoingCall = call
-            Log.d("LIU", callMonitorService.onGoingCall.toString())
+            callMonitor.onGoingCall = call
+            Log.d("LIU", callMonitor.onGoingCall.toString())
         } else {
-            callMonitorService.onGoingCall = null
+            callMonitor.onGoingCall = null
         }
     }
 }

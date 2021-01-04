@@ -3,13 +3,15 @@ package com.lsurvila.callmonitortask
 import android.app.role.RoleManager
 import android.content.ContentResolver
 import android.net.ConnectivityManager
+import android.telecom.TelecomManager
 import androidx.core.content.getSystemService
 import com.lsurvila.callmonitortask.repository.ContactEntityMapper
 import com.lsurvila.callmonitortask.repository.ContactRepository
 import com.lsurvila.callmonitortask.repository.ContactResolverRepository
 import com.lsurvila.callmonitortask.service.callmonitor.CallEntityMapper
-import com.lsurvila.callmonitortask.service.callmonitor.receiver.CallMonitorReceiverService
-import com.lsurvila.callmonitortask.service.callmonitor.screening.CallMonitorScreeningService
+import com.lsurvila.callmonitortask.service.callmonitor.connection.ConnectionCallMonitor
+import com.lsurvila.callmonitortask.service.callmonitor.receiver.BroadcastCallMonitor
+import com.lsurvila.callmonitortask.service.callmonitor.screening.ScreeningCallMonitor
 import com.lsurvila.callmonitortask.service.network.AndroidNetworkService
 import com.lsurvila.callmonitortask.service.network.NetworkService
 import com.lsurvila.callmonitortask.ui.CallMonitorViewModel
@@ -27,11 +29,12 @@ val appModule = module {
     single<ContactRepository> { ContactResolverRepository(get(), get()) }
 
     single<RoleManager?> { androidContext().getSystemService() }
+    single<TelecomManager?> {androidContext().getSystemService() }
     single {
         if (VersionUtil.isQ()) {
-            CallMonitorScreeningService(get())
+            ConnectionCallMonitor(get(), androidContext())
         } else {
-            CallMonitorReceiverService()
+            BroadcastCallMonitor()
         }
     }
     single<ConnectivityManager?> { androidApplication().getSystemService() }

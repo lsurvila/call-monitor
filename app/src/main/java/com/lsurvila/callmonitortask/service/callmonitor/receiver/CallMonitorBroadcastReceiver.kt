@@ -7,7 +7,7 @@ import android.telephony.TelephonyManager
 import android.util.Log
 
 
-class AndroidCallReceiverService: BroadcastReceiver() {
+class CallMonitorBroadcastReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent) {
         val extras = intent.extras

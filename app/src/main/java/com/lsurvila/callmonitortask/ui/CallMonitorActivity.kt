@@ -4,6 +4,7 @@ import android.app.role.RoleManager
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.telecom.TelecomManager
 import android.view.Menu
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -39,13 +40,22 @@ class CallMonitorActivity : AppCompatActivity() {
     private fun toggleCallService(start: Boolean) {
         if (start) {
             if (VersionUtil.isQ()) {
-                startCallScreeningService()
+                startConnectionService()
             }
         } else {
             if (VersionUtil.isQ()) {
-                stopCallScreeningService()
+                stopConnectionService()
             }
         }
+    }
+
+    private fun stopConnectionService() {
+        viewModel.stopService(false)
+    }
+
+    private fun startConnectionService() {
+        viewModel.startService(true)
+//        startActivity(Intent(TelecomManager.ACTION_CHANGE_PHONE_ACCOUNTS));
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
