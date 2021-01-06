@@ -1,25 +1,18 @@
 package com.lsurvila.callmonitortask
 
 import android.util.Log
-import com.lsurvila.callmonitortask.model.CallMonitorState
-import com.lsurvila.callmonitortask.repository.ContactRepository
 import com.lsurvila.callmonitortask.model.Call
-import com.lsurvila.callmonitortask.service.callmonitor.CallMonitor
+import com.lsurvila.callmonitortask.model.CallMonitorState
+import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 
-class LogOngoingCallUseCase(
-    private val callMonitor: CallMonitor,
-    private val contactRepository: ContactRepository
-) {
+class LogOngoingCallUseCase(private val callMonitorService: CallMonitorService) {
 
     fun execute(call: Call) {
-        if (callMonitor.currentState == CallMonitorState.STARTED && call.incomingCall) {
-            call.number?.let {
-                //call.copy(name = contactRepository.get(it).name)
-            }
-            callMonitor.onGoingCall = call
-            Log.d("LIU", callMonitor.onGoingCall.toString())
+        if (callMonitorService.currentState == CallMonitorState.STARTED && call.incomingCall) {
+            callMonitorService.onGoingCall = call
+            Log.d("LIU", callMonitorService.onGoingCall.toString())
         } else {
-            callMonitor.onGoingCall = null
+            callMonitorService.onGoingCall = null
         }
     }
 }

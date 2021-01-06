@@ -4,7 +4,6 @@ import android.app.role.RoleManager
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.telecom.TelecomManager
 import android.view.Menu
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +16,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-private const val REQUEST_START_CALL_SCREENING = 1
+private const val REQUEST_START_IN_CALL_SERVICE = 1
 
 class CallMonitorActivity : AppCompatActivity() {
 
@@ -40,39 +39,38 @@ class CallMonitorActivity : AppCompatActivity() {
     private fun toggleCallService(start: Boolean) {
         if (start) {
             if (VersionUtil.isQ()) {
-                startConnectionService()
+                startInCallService()
             }
         } else {
             if (VersionUtil.isQ()) {
-                stopConnectionService()
+                stopInCallService()
             }
         }
     }
 
-    private fun stopConnectionService() {
-        viewModel.stopService(false)
-    }
+    private fun stopInCallService() {
+        viewModel.stopService(true)
 
-    private fun startConnectionService() {
-        viewModel.startService(true)
-//        startActivity(Intent(TelecomManager.ACTION_CHANGE_PHONE_ACCOUNTS));
+//        if (getSystemService(TelecomManager::class.java).defaultDialerPackage == packageName) {
+//            startActivityForResult(Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
+//                .putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, getSystemService(TelecomManager::class.java).defaultDialerPackage), REQUEST_STOP_IN_CALL_SERVICE)
+//        }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun startCallScreeningService() {
-        val intent = roleManager?.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING)
-        startActivityForResult(intent, REQUEST_START_CALL_SCREENING)
+    private fun startInCallService() {
+        val intent = roleManager?.createRequestRoleIntent(RoleManager.ROLE_DIALER)
+        startActivityForResult(intent, REQUEST_START_IN_CALL_SERVICE)
+
+//        if (getSystemService(TelecomManager::class.java).defaultDialerPackage != packageName) {
+//            startActivityForResult(Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
+//                .putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, packageName), REQUEST_START_IN_CALL_SERVICE)
+//        }
     }
 
-    private fun stopCallScreeningService() {
-        // There doesn't seem to be API to remove call screening role unless uninstalling app
-        viewModel.stopService(true)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_START_CALL_SCREENING) {
+        if (requestCode == REQUEST_START_IN_CALL_SERVICE) {
             viewModel.startService(resultCode == RESULT_OK)
         }
     }
@@ -80,7 +78,7 @@ class CallMonitorActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_call_monitor, menu)
         serviceToggle = menu.findItem(R.id.switch_item).actionView.findViewById(R.id.callMonitorSwitch)
-        viewModel.syncServiceToggle()
+        viewModel.onStart()
         serviceToggle.setOnCheckedChangeListener { button, isChecked ->
             viewModel.toggleService(button.isPressed, isChecked)
         }

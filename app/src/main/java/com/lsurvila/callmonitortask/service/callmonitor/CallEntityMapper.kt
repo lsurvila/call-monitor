@@ -1,25 +1,26 @@
 package com.lsurvila.callmonitortask.service.callmonitor
 
-import android.os.Build
 import android.telecom.Call
 import android.telephony.PhoneNumberUtils
-import androidx.annotation.RequiresApi
+import com.lsurvila.callmonitortask.util.VersionUtil
 import java.util.*
 
 class CallEntityMapper {
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    fun map(callDetails: Call.Details): com.lsurvila.callmonitortask.model.Call {
+    fun map(state: Int, callDetails: Call.Details): com.lsurvila.callmonitortask.model.Call {
         return com.lsurvila.callmonitortask.model.Call(
-            mapIsIncomingCall(callDetails.callDirection),
-            mapNumber(callDetails.handle.schemeSpecificPart),
-            callDetails.callerDisplayName + callDetails.contactDisplayName
+            mapIsIncomingCall(state, callDetails),
+            callDetails.handle.schemeSpecificPart,
+            callDetails.contactDisplayName
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun mapIsIncomingCall(callDirection: Int) =
-        callDirection == Call.Details.DIRECTION_INCOMING
+    private fun mapIsIncomingCall(state: Int, callDetails: Call.Details) =
+        if (VersionUtil.isQ()) {
+            callDetails.callDirection == Call.Details.DIRECTION_INCOMING
+        } else {
+            state == Call.STATE_RINGING
+        }
 
     private fun mapNumber(phoneNumber: String?): String? = if (!phoneNumber.isNullOrEmpty()) {
         PhoneNumberUtils.formatNumber(phoneNumber, Locale.getDefault().country)

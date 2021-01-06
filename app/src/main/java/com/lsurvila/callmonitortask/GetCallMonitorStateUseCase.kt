@@ -1,11 +1,11 @@
 package com.lsurvila.callmonitortask
 
 import com.lsurvila.callmonitortask.model.CallMonitorState
-import com.lsurvila.callmonitortask.service.callmonitor.CallMonitor
+import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 
-class GetCallMonitorStateUseCase(private val callMonitor: CallMonitor) {
+class GetCallMonitorStateUseCase(private val callMonitorService: CallMonitorService) {
 
     fun execute(): CallMonitorState {
-        return callMonitor.currentState
+        return callMonitorService.currentState
     }
 }

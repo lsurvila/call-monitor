@@ -48,6 +48,7 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$ktx_activity_version"
     implementation "androidx.work:work-runtime-ktx:$ktx_work_version"
 
+    implementation "pub.devrel:easypermissions:$easy_permissions_version"
     implementation "io.ktor:ktor-server-cio:$ktor_version"
     implementation "com.jraska:console:$console_version"
 
