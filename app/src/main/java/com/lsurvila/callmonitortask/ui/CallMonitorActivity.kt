@@ -8,10 +8,12 @@ import android.view.Menu
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.lifecycleScope
 import com.jraska.console.Console
 import com.lsurvila.callmonitortask.R
 import com.lsurvila.callmonitortask.databinding.ActivityCallMonitorBinding
 import com.lsurvila.callmonitortask.util.VersionUtil
+import kotlinx.coroutines.flow.collect
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -34,6 +36,12 @@ class CallMonitorActivity : AppCompatActivity() {
             viewState.consoleMessage?.let { Console.writeLine(it) }
             viewState.toggleService?.let { toggleCallService(it) }
         })
+        lifecycleScope.launchWhenResumed {
+            viewModel.phone()
+                .collect {
+                    Console.writeLine(it)
+                }
+        }
     }
 
     private fun toggleCallService(start: Boolean) {
@@ -78,7 +86,7 @@ class CallMonitorActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_call_monitor, menu)
         serviceToggle = menu.findItem(R.id.switch_item).actionView.findViewById(R.id.callMonitorSwitch)
-        viewModel.onStart()
+        //viewModel.onStart()
         serviceToggle.setOnCheckedChangeListener { button, isChecked ->
             viewModel.toggleService(button.isPressed, isChecked)
         }

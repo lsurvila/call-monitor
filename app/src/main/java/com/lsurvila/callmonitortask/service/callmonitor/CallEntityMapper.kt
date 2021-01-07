@@ -2,6 +2,7 @@ package com.lsurvila.callmonitortask.service.callmonitor
 
 import android.telecom.Call
 import android.telephony.PhoneNumberUtils
+ import com.lsurvila.callmonitortask.model.PhoneState
 import com.lsurvila.callmonitortask.util.VersionUtil
 import java.util.*
 
@@ -25,4 +26,15 @@ class CallEntityMapper {
     private fun mapNumber(phoneNumber: String?): String? = if (!phoneNumber.isNullOrEmpty()) {
         PhoneNumberUtils.formatNumber(phoneNumber, Locale.getDefault().country)
     } else null
+
+    fun mapState(state: Int): PhoneState {
+        return when (state) {
+            Call.STATE_ACTIVE -> PhoneState.ACTIVE
+            Call.STATE_RINGING -> PhoneState.RINGING
+            Call.STATE_CONNECTING -> PhoneState.CONNECTING
+            Call.STATE_DIALING -> PhoneState.DIALING
+            Call.STATE_DISCONNECTED -> PhoneState.DISCONNECTED
+            else -> PhoneState.IDLE
+        }
+    }
 }
