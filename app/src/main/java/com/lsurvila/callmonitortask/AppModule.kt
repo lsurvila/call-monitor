@@ -33,6 +33,4 @@ val appModule = module {
     factory { GetPhoneStateUseCase(get()) }
     factory { ViewStateMapper() }
     viewModel { CallMonitorViewModel(get(), get(), get(), get(), get()) }
-
-    factory { HandlePhoneCallUseCase(get()) }
 }

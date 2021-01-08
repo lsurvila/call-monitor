@@ -61,8 +61,7 @@ class ViewStateMapper {
         return when(it.state) {
             PhoneState.IDLE -> CallMonitorViewState()
             PhoneState.RINGING -> CallMonitorViewState(consoleMessage = "Incoming call from ${it.number}...".withDateTime())
-            PhoneState.DIALING -> CallMonitorViewState(consoleMessage = "Calling to ${it.number}...".withDateTime())
-            PhoneState.ACTIVE -> CallMonitorViewState(consoleMessage = "Call connected".withDateTime())
+            PhoneState.CONNECTING -> CallMonitorViewState(consoleMessage = "Call connecting to ${it.number}...".withDateTime())
             PhoneState.DISCONNECTED -> CallMonitorViewState(consoleMessage = "Call ended".withDateTime())
         }
     }
