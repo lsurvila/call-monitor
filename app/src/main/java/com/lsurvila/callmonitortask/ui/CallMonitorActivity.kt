@@ -32,15 +32,14 @@ class CallMonitorActivity : AppCompatActivity() {
         val binding = ActivityCallMonitorBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel.service().observe(this, { viewState ->
-            serviceToggle.isChecked = viewState.serviceSwitchChecked
+            viewState.serviceSwitchChecked?.let { serviceToggle.isChecked = it }
             viewState.consoleMessage?.let { Console.writeLine(it) }
             viewState.toggleService?.let { toggleCallService(it) }
         })
         lifecycleScope.launchWhenResumed {
-            viewModel.phone()
-                .collect {
-                    Console.writeLine(it)
-                }
+            viewModel.phone().collect { viewState ->
+                viewState.consoleMessage?.let { Console.writeLine(it) }
+            }
         }
     }
 
@@ -85,7 +84,8 @@ class CallMonitorActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_call_monitor, menu)
-        serviceToggle = menu.findItem(R.id.switch_item).actionView.findViewById(R.id.callMonitorSwitch)
+        serviceToggle =
+            menu.findItem(R.id.switch_item).actionView.findViewById(R.id.callMonitorSwitch)
         //viewModel.onStart()
         serviceToggle.setOnCheckedChangeListener { button, isChecked ->
             viewModel.toggleService(button.isPressed, isChecked)

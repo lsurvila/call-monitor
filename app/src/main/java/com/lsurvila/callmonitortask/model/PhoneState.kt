@@ -4,7 +4,6 @@ enum class PhoneState {
     IDLE,
     RINGING,
     DIALING,
-    CONNECTING,
     ACTIVE,
     DISCONNECTED
 }

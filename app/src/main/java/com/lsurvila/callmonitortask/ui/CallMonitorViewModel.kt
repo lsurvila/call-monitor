@@ -5,10 +5,10 @@ import com.lsurvila.callmonitortask.GetCallMonitorStateUseCase
 import com.lsurvila.callmonitortask.GetPhoneStateUseCase
 import com.lsurvila.callmonitortask.StartCallMonitorUseCase
 import com.lsurvila.callmonitortask.StopCallMonitorUseCase
+import com.lsurvila.callmonitortask.model.Call
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.PhoneState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 
 class CallMonitorViewModel(
     private val getCallMonitorStateUseCase: GetCallMonitorStateUseCase,
@@ -22,8 +22,8 @@ class CallMonitorViewModel(
 
     fun service() = _service
 
-    fun phone(): StateFlow<PhoneState> {
-        return getPhoneStateUseCase.execute()
+    fun phone(): Flow<CallMonitorViewState> {
+        return getPhoneStateUseCase.execute().map { mapper.map2(it) }
     }
 
     fun toggleService(isToggledByUser: Boolean, isToggledOn: Boolean) {
