@@ -1,7 +1,6 @@
 package com.lsurvila.callmonitortask
 
 import android.app.role.RoleManager
-import android.content.ContentResolver
 import android.net.ConnectivityManager
 import android.telecom.TelecomManager
 import androidx.core.content.getSystemService
@@ -18,7 +17,6 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    single<ContentResolver> { androidContext().contentResolver }
     single { CallEntityMapper() }
 
     single<RoleManager?> { androidContext().getSystemService() }
@@ -31,6 +29,8 @@ val appModule = module {
     factory { StartCallMonitorUseCase(get()) }
     factory { StopCallMonitorUseCase(get()) }
     factory { GetPhoneStateUseCase(get()) }
+    factory { AnswerPhoneCallUseCase(get()) }
+    factory { RejectPhoneCallUseCase(get()) }
     factory { ViewStateMapper() }
-    viewModel { CallMonitorViewModel(get(), get(), get(), get(), get()) }
+    viewModel { CallMonitorViewModel(get(), get(), get(), get(), get(), get(), get()) }
 }

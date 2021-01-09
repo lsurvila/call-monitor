@@ -9,7 +9,9 @@ import java.util.*
 data class CallMonitorViewState(
     val toggleService: Boolean? = null,
     val serviceSwitchChecked: Boolean? = false,
-    val consoleMessage: String? = null
+    val consoleMessage: String? = null,
+    val isAnswerButtonEnabled: Boolean? = null,
+    val isRejectButtonEnabled: Boolean? = null,
 )
 
 class ViewStateMapper {
@@ -58,11 +60,28 @@ class ViewStateMapper {
     }
 
     fun map2(it: Call): CallMonitorViewState {
-        return when(it.state) {
+        return when (it.state) {
             PhoneState.IDLE -> CallMonitorViewState()
-            PhoneState.RINGING -> CallMonitorViewState(consoleMessage = "Incoming call from ${it.number}...".withDateTime())
-            PhoneState.CONNECTING -> CallMonitorViewState(consoleMessage = "Call connecting to ${it.number}...".withDateTime())
-            PhoneState.DISCONNECTED -> CallMonitorViewState(consoleMessage = "Call ended".withDateTime())
+            PhoneState.RINGING -> CallMonitorViewState(
+                consoleMessage = "Incoming call from ${it.number}...".withDateTime(),
+                isAnswerButtonEnabled = true,
+                isRejectButtonEnabled = true
+            )
+            PhoneState.CONNECTING -> CallMonitorViewState(
+                consoleMessage = "Call connecting to ${it.number}...".withDateTime(),
+                isAnswerButtonEnabled = false,
+                isRejectButtonEnabled = true
+            )
+            PhoneState.ACTIVE -> CallMonitorViewState(
+                consoleMessage = "Call connected...".withDateTime(),
+                isAnswerButtonEnabled = false,
+                isRejectButtonEnabled = true,
+            )
+            PhoneState.DISCONNECTED -> CallMonitorViewState(
+                consoleMessage = "Call ended.".withDateTime(),
+                isAnswerButtonEnabled = false,
+                isRejectButtonEnabled = false
+            )
         }
     }
 }

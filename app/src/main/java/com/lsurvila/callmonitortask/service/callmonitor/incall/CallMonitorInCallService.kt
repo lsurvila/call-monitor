@@ -2,34 +2,46 @@ package com.lsurvila.callmonitortask.service.callmonitor.incall
 
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.os.Bundle
 import android.telecom.Call
 import android.telecom.InCallService
-import android.util.Log
+import android.telecom.VideoProfile
 import com.lsurvila.callmonitortask.service.callmonitor.CallEntityMapper
+import com.lsurvila.callmonitortask.service.callmonitor.CallIntentListener
 import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 import com.lsurvila.callmonitortask.ui.CallMonitorActivity
 import org.koin.android.ext.android.inject
 
-class CallMonitorInCallService: InCallService() {
+class CallMonitorInCallService: InCallService(), CallIntentListener {
 
     private val callMonitorService: CallMonitorService by inject()
     private val entityMapper: CallEntityMapper by inject()
 
-    override fun onConnectionEvent(call: Call?, event: String?, extras: Bundle?) {
-        Log.d("Liu", "onConnectionEvent $call $event $extras")
-        super.onConnectionEvent(call, event, extras)
+    private var currentCall: Call? = null
+
+    init {
+        callMonitorService.setCallIntentListener(this)
     }
 
     override fun onCallAdded(call: Call) {
-        Log.d("Liu", "onCallAdded" + call.state + call.details.contactDisplayName)
-        val callData = entityMapper.map(call)
-        callMonitorService.setPhoneCall(callData)
+        currentCall = call
+        currentCall?.registerCallback(callCallback)
+        updateOngoingCall(call)
         openPhoneDialer()
     }
 
     override fun onCallRemoved(call: Call) {
-        Log.d("Liu", "onCallRemoved" + call.state + call.details.contactDisplayName)
+        currentCall = call
+        updateOngoingCall(call)
+        currentCall?.unregisterCallback(callCallback)
+    }
+
+    private val callCallback = object : Call.Callback() {
+        override fun onStateChanged(call: Call, state: Int) {
+            updateOngoingCall(call)
+        }
+    }
+
+    private fun updateOngoingCall(call: Call) {
         val callData = entityMapper.map(call)
         callMonitorService.setPhoneCall(callData)
     }
@@ -39,5 +51,14 @@ class CallMonitorInCallService: InCallService() {
             Intent(this, CallMonitorActivity::class.java)
                 .setFlags(FLAG_ACTIVITY_NEW_TASK)
         )
+    }
+
+    override fun onAnswerCall() {
+        currentCall?.answer(VideoProfile.STATE_AUDIO_ONLY)
+    }
+
+    override fun onRejectCall() {
+        currentCall?.reject(Call.REJECT_REASON_DECLINED)
+        currentCall?.disconnect()
     }
 }

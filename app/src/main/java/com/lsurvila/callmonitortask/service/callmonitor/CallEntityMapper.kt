@@ -2,7 +2,7 @@ package com.lsurvila.callmonitortask.service.callmonitor
 
 import android.telecom.Call
 import android.telephony.PhoneNumberUtils
- import com.lsurvila.callmonitortask.model.PhoneState
+import com.lsurvila.callmonitortask.model.PhoneState
 import com.lsurvila.callmonitortask.util.VersionUtil
 import java.util.*
 
@@ -30,6 +30,7 @@ class CallEntityMapper {
         return when (state) {
             Call.STATE_RINGING -> PhoneState.RINGING // incoming
             Call.STATE_CONNECTING -> PhoneState.CONNECTING // outgoing
+            Call.STATE_ACTIVE -> PhoneState.ACTIVE
             Call.STATE_DISCONNECTED -> PhoneState.DISCONNECTED
             else -> PhoneState.IDLE
         }

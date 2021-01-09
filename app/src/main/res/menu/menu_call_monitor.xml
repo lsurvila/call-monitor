@@ -3,6 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/reject_item"
+        android:title="@string/reject"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/answer_item"
+        android:title="@string/answer"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/switch_item"
         android:title="@string/call_monitor_switch"
         app:actionLayout="@layout/switch_item"
