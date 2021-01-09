@@ -18,16 +18,16 @@ abstract class CallMonitorService {
 
     private var listener: CallIntentListener? = null
 
+    fun setCallIntentListener(listener: CallIntentListener) {
+        this.listener = listener
+    }
+
     fun phoneCall(): StateFlow<Call> {
         return _phoneCall.asStateFlow()
     }
 
     fun setPhoneCall(call: Call) {
         _phoneCall.value = call
-    }
-
-    fun setCallIntentListener(listener: CallIntentListener) {
-        this.listener = listener
     }
 
     fun answerCall() {
@@ -38,8 +38,15 @@ abstract class CallMonitorService {
         listener?.onRejectCall()
     }
 
-    var currentState: CallMonitorState = CallMonitorState.NOT_STARTED
+    private var _serviceState = MutableStateFlow(CallMonitorState.IDLE)
+
+    fun serviceState(): StateFlow<CallMonitorState> {
+        return _serviceState.asStateFlow()
+    }
+
+    fun setServiceState(state: CallMonitorState) {
+        _serviceState.value = state
+    }
 
     abstract fun isAvailable(): Boolean
-
 }

@@ -5,20 +5,27 @@ import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 
 class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService) {
 
-    fun execute(permissionGranted: Boolean = false): CallMonitorState {
-        if (callMonitorService.currentState != CallMonitorState.STARTING) {
-            if (callMonitorService.isAvailable()) {
-                callMonitorService.currentState = CallMonitorState.STARTING
-            } else {
-                callMonitorService.currentState = CallMonitorState.NOT_AVAILABLE
-            }
+    fun checkIfAvailable() {
+        callMonitorService.setServiceState(CallMonitorState.STARTING)
+        if (callMonitorService.isAvailable()) {
+            callMonitorService.setServiceState(CallMonitorState.AVAILABLE)
         } else {
-            if (permissionGranted) {
-                callMonitorService.currentState = CallMonitorState.STARTED
-            } else {
-                callMonitorService.currentState = CallMonitorState.PERMISSION_DENIED
-            }
+            callMonitorService.setServiceState(CallMonitorState.NOT_AVAILABLE)
         }
-        return callMonitorService.currentState
+
+//        if (callMonitorService._serviceState != CallMonitorState.STARTING) {
+//            if (callMonitorService.isAvailable()) {
+//                callMonitorService._serviceState = CallMonitorState.STARTING
+//            } else {
+//                callMonitorService._serviceState = CallMonitorState.NOT_AVAILABLE
+//            }
+//        } else {
+//            if (permissionGranted) {
+//                callMonitorService._serviceState = CallMonitorState.STARTED
+//            } else {
+//                callMonitorService._serviceState = CallMonitorState.PERMISSION_DENIED
+//            }
+//        }
+//        return callMonitorService._serviceState
     }
 }

@@ -17,15 +17,17 @@ class CallMonitorViewModel(
 
     private val _service = MutableLiveData<CallMonitorViewState>()
 
-    fun service() = _service
-
-    fun phone(): Flow<CallMonitorViewState> {
-        return getPhoneStateUseCase.execute().map { mapper.map2(it) }
+    fun service(): Flow<CallMonitorViewState> {
+        return getCallMonitorStateUseCase.execute().map { mapper.map(it) }
     }
 
-    fun toggleService(isToggledByUser: Boolean, isToggledOn: Boolean) {
-        if (isToggledByUser) {
-            if (isToggledOn) {
+    fun phone(): Flow<CallMonitorViewState> {
+        return getPhoneStateUseCase.execute().map { mapper.mapFromPhoneCall(it) }
+    }
+
+    fun onServiceSwitched(isSwitchedByUser: Boolean, isSWitchedOn: Boolean) {
+        if (isSwitchedByUser) {
+            if (isSWitchedOn) {
                 startService()
             } else {
                 stopService()
@@ -34,8 +36,7 @@ class CallMonitorViewModel(
     }
 
     fun startService(permissionGranted: Boolean = false) {
-        val serviceState = startCallMonitorUseCase.execute(permissionGranted)
-        updateViewState(serviceState)
+        startCallMonitorUseCase.checkIfAvailable()
     }
 
     fun stopService(withWarning: Boolean = false) {
@@ -50,8 +51,8 @@ class CallMonitorViewModel(
 
     fun onStart() {
         val serviceState = getCallMonitorStateUseCase.execute()
-        val viewState = mapper.mapOnlyToggleState(serviceState)
-        _service.value = viewState
+//        val viewState = mapper.mapOnlyToggleState(serviceState)
+//        _service.value = viewState
     }
 
     fun onAnswerClicked() {

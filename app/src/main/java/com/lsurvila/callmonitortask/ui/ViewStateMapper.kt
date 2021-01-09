@@ -18,13 +18,18 @@ class ViewStateMapper {
 
     fun map(serviceState: CallMonitorState): CallMonitorViewState {
         return when (serviceState) {
+            CallMonitorState.IDLE -> CallMonitorViewState()
             CallMonitorState.NOT_STARTED -> CallMonitorViewState()
             CallMonitorState.STARTING -> CallMonitorViewState(
                 toggleService = true,
                 serviceSwitchChecked = true,
                 consoleMessage = "Starting...".withDateTime()
             )
+            CallMonitorState.AVAILABLE -> CallMonitorViewState(
+                serviceSwitchChecked = true
+            )
             CallMonitorState.NOT_AVAILABLE -> CallMonitorViewState(
+                serviceSwitchChecked = false,
                 consoleMessage = "Service is not available".withDateTime()
             )
             CallMonitorState.PERMISSION_DENIED -> CallMonitorViewState(
@@ -59,16 +64,19 @@ class ViewStateMapper {
         return "${DateTimeUtil.formatDateTime(Date())}: $this"
     }
 
-    fun map2(it: Call): CallMonitorViewState {
-        return when (it.state) {
-            PhoneState.IDLE -> CallMonitorViewState()
+    fun mapFromPhoneCall(call: Call): CallMonitorViewState {
+        return when (call.state) {
+            PhoneState.IDLE -> CallMonitorViewState(
+                isAnswerButtonEnabled = false,
+                isRejectButtonEnabled = false
+            )
             PhoneState.RINGING -> CallMonitorViewState(
-                consoleMessage = "Incoming call from ${it.number}...".withDateTime(),
+                consoleMessage = "Incoming call from ${call.number}...".withDateTime(),
                 isAnswerButtonEnabled = true,
                 isRejectButtonEnabled = true
             )
             PhoneState.CONNECTING -> CallMonitorViewState(
-                consoleMessage = "Call connecting to ${it.number}...".withDateTime(),
+                consoleMessage = "Call connecting to ${call.number}...".withDateTime(),
                 isAnswerButtonEnabled = false,
                 isRejectButtonEnabled = true
             )
@@ -82,6 +90,7 @@ class ViewStateMapper {
                 isAnswerButtonEnabled = false,
                 isRejectButtonEnabled = false
             )
+            PhoneState.UNKNOWN -> CallMonitorViewState() // don't change anything
         }
     }
 }

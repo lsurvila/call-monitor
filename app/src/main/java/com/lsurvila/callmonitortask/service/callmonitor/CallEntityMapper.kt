@@ -32,7 +32,7 @@ class CallEntityMapper {
             Call.STATE_CONNECTING -> PhoneState.CONNECTING // outgoing
             Call.STATE_ACTIVE -> PhoneState.ACTIVE
             Call.STATE_DISCONNECTED -> PhoneState.DISCONNECTED
-            else -> PhoneState.IDLE
+            else -> PhoneState.UNKNOWN
         }
     }
 }

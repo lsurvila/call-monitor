@@ -29,22 +29,27 @@ class CallMonitorActivity : AppCompatActivity() {
 
     private var serviceToggle: SwitchCompat? = null
 
-    private var currentViewState: CallMonitorViewState? = null
+    private var currentIsCallButtonEnabled: Boolean? = null
+    private var currentIsRejectButtonEnabled: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityCallMonitorBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel.service().observe(this, { viewState ->
-            viewState.serviceSwitchChecked?.let { serviceToggle?.isChecked = it }
-            viewState.consoleMessage?.let { Console.writeLine(it) }
-            viewState.toggleService?.let { toggleCallService(it) }
-        })
         lifecycleScope.launchWhenResumed {
             viewModel.phone().collect { viewState ->
-                currentViewState = viewState
-                viewState.consoleMessage?.let { Console.writeLine(it) }
+                Log.d("Liu", "phone updated $viewState")
+                currentIsCallButtonEnabled = viewState.isAnswerButtonEnabled
+                currentIsRejectButtonEnabled = viewState.isRejectButtonEnabled
                 invalidateOptionsMenu()
+                viewState.consoleMessage?.let { Console.writeLine(it) }
+            }
+        }
+        lifecycleScope.launchWhenResumed {
+            viewModel.service().collect { viewState ->
+                Log.d("Liu", "service updated $viewState")
+                viewState.serviceSwitchChecked?.let { serviceToggle?.isChecked = it }
+                viewState.consoleMessage?.let { Console.writeLine(it) }
             }
         }
     }
@@ -89,10 +94,8 @@ class CallMonitorActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        currentViewState?.let { viewState ->
-            viewState.isAnswerButtonEnabled?.let { menu.findItem(R.id.answer_item).isEnabled = it }
-            viewState.isRejectButtonEnabled?.let { menu.findItem(R.id.reject_item).isEnabled = it }
-        }
+        currentIsCallButtonEnabled?.let { menu.findItem(R.id.answer_item).isEnabled = it }
+        currentIsRejectButtonEnabled?.let { menu.findItem(R.id.reject_item).isEnabled = it }
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -103,7 +106,7 @@ class CallMonitorActivity : AppCompatActivity() {
 
         //viewModel.onStart()
         serviceToggle?.setOnCheckedChangeListener { button, isChecked ->
-            viewModel.toggleService(button.isPressed, isChecked)
+            viewModel.onServiceSwitched(button.isPressed, isChecked)
         }
         return true
     }
