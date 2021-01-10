@@ -63,6 +63,10 @@ class ViewStateMapper {
                 serviceSwitchChecked = false,
                 consoleMessage = "Service requires active Wifi connection, currently it's offline".withDateTime()
             )
+            CallMonitorState.WIFI_IP_FAILED_TO_RESOLVE -> CallMonitorViewState(
+                serviceSwitchChecked = false,
+                consoleMessage = "Failed to resolve Wifi IP address".withDateTime()
+            )
         }
     }
 

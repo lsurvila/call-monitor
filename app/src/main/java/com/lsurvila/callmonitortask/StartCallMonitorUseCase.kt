@@ -42,7 +42,12 @@ class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService
 
     private fun startServer() {
         if (networkService.isWifiConnected()) {
-            callMonitorService.setServiceState(CallMonitorState.STARTED)
+            val ipAddress = networkService.getWifiIpAddress()
+            if (ipAddress != null) {
+                callMonitorService.setServiceState(CallMonitorState.STARTED)
+            } else {
+                handleServiceNotStarted(CallMonitorState.WIFI_IP_FAILED_TO_RESOLVE)
+            }
         } else {
             handleServiceNotStarted(CallMonitorState.WIFI_DISCONNECTED)
         }

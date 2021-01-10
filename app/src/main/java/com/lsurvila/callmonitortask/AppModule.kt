@@ -2,6 +2,7 @@ package com.lsurvila.callmonitortask
 
 import android.app.role.RoleManager
 import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.telecom.TelecomManager
 import androidx.core.content.getSystemService
 import com.lsurvila.callmonitortask.service.callmonitor.CallEntityMapper
@@ -31,7 +32,8 @@ val appModule = module {
         }
     }
     single<ConnectivityManager?> { androidApplication().getSystemService() }
-    single<NetworkService> { AndroidNetworkService(get()) }
+    single<WifiManager?> { androidApplication().getSystemService() }
+    single<NetworkService> { AndroidNetworkService(get(), get()) }
 
     factory { ViewCallMonitorStateUseCase(get()) }
     factory { StartCallMonitorUseCase(get(), get()) }
