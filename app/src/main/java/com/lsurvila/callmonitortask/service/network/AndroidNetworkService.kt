@@ -4,8 +4,11 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.util.Log
+import com.lsurvila.callmonitortask.util.NetworkUtil
+import io.ktor.http.*
 import java.math.BigInteger
 import java.net.InetAddress
+import java.net.URI
 import java.net.UnknownHostException
 import java.nio.ByteOrder
 
@@ -23,8 +26,8 @@ class AndroidNetworkService(
         return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
     }
 
-    override fun getWifiIpAddress(): String? {
-        var ipAddress: String? = null
+    override fun getWifiAddress(port: Int): URI? {
+        var address: URI? = null
         var ipAddressInt = wifiService.connectionInfo.ipAddress
 
         // Convert little-endian to big-endian if needed
@@ -35,11 +38,12 @@ class AndroidNetworkService(
         val ipByteArray: ByteArray = BigInteger.valueOf(ipAddressInt.toLong()).toByteArray()
 
         try {
-            ipAddress = InetAddress.getByAddress(ipByteArray).hostAddress
+            val host = InetAddress.getByAddress(ipByteArray).hostAddress
+            address = NetworkUtil.buildHttpAddress(host, port)
         } catch (ex: UnknownHostException) {
             Log.e(TAG, "Failed to resolve ip address", ex)
         }
 
-        return ipAddress
+        return address
     }
 }

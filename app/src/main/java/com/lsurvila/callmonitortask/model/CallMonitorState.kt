@@ -15,7 +15,8 @@ enum class State {
     PHONE_PERMISSION_DENIED,
     CONTACTS_PERMISSION_DENIED,
     WIFI_DISCONNECTED,
-    WIFI_IP_FAILED_TO_RESOLVE
+    WIFI_IP_FAILED_TO_RESOLVE,
+    HTTP_SERVER_FAILED
 }
 
 data class CallMonitorState(val state: State, val address: URI? = null)

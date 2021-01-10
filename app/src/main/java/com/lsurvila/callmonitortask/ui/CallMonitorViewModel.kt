@@ -22,21 +22,21 @@ class CallMonitorViewModel(
         return viewPhoneStateUseCase.execute().map { mapper.mapFromPhoneCall(it) }
     }
 
-    fun onServiceSwitched(isSwitchedByUser: Boolean, isSWitchedOn: Boolean) {
+    fun onServiceSwitched(isSwitchedByUser: Boolean, isSwitchedOn: Boolean) {
         if (isSwitchedByUser) {
-            if (isSWitchedOn) {
-                checkIfPhoneIsAvailable()
+            if (isSwitchedOn) {
+                onServiceSwitchedOn()
             } else {
-                stopService()
+                onServiceSwitchedOff()
             }
         }
     }
 
-    private fun stopService() {
+    private fun onServiceSwitchedOff() {
         stopCallMonitorUseCase.execute()
     }
 
-    private fun checkIfPhoneIsAvailable() {
+    private fun onServiceSwitchedOn() {
         startCallMonitorUseCase.checkIfAvailable()
     }
 

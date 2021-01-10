@@ -1,10 +1,12 @@
 package com.lsurvila.callmonitortask
 
+import android.util.Log
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.State
 import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 import com.lsurvila.callmonitortask.service.http.HttpService
 import com.lsurvila.callmonitortask.service.network.NetworkService
+import java.lang.Exception
 
 class StartCallMonitorUseCase(
     private val callMonitorService: CallMonitorService,
@@ -47,10 +49,16 @@ class StartCallMonitorUseCase(
 
     private fun startServer() {
         if (networkService.isWifiConnected()) {
-            val ipAddress = networkService.getWifiIpAddress()
-            if (ipAddress != null) {
-                httpService.start(ipAddress)
-                callMonitorService.setServiceState(CallMonitorState(State.STARTED, httpService.address))
+            val wifiAddress = networkService.getWifiAddress(HttpService.PORT)
+            if (wifiAddress != null) {
+                httpService.address = wifiAddress
+                try {
+                    httpService.start()
+                    callMonitorService.setServiceState(CallMonitorState(State.STARTED, httpService.address))
+                } catch (ex: Exception) {
+                    Log.e(HttpService.TAG, "Failed to run HTTP server", ex)
+                    handleServiceNotStarted(State.HTTP_SERVER_FAILED)
+                }
             } else {
                 handleServiceNotStarted(State.WIFI_IP_FAILED_TO_RESOLVE)
             }

@@ -68,6 +68,10 @@ class ViewStateMapper {
                 serviceSwitchChecked = false,
                 consoleMessage = "Failed to resolve Wifi IP address".withDateTime()
             )
+            State.HTTP_SERVER_FAILED -> CallMonitorViewState(
+                serviceSwitchChecked = false,
+                consoleMessage = "Error while running HTTP server. If error persists restart the app".withDateTime()
+            )
         }
     }
 
