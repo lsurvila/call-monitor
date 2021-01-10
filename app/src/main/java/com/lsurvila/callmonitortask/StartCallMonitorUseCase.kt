@@ -50,7 +50,7 @@ class StartCallMonitorUseCase(
             val ipAddress = networkService.getWifiIpAddress()
             if (ipAddress != null) {
                 httpService.start(ipAddress)
-                callMonitorService.setServiceState(CallMonitorState(State.STARTED, httpService.ipAddress))
+                callMonitorService.setServiceState(CallMonitorState(State.STARTED, httpService.address))
             } else {
                 handleServiceNotStarted(State.WIFI_IP_FAILED_TO_RESOLVE)
             }

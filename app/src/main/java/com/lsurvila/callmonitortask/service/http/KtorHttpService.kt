@@ -1,14 +1,21 @@
 package com.lsurvila.callmonitortask.service.http
 
+import com.lsurvila.callmonitortask.util.NetworkUtil
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.netty.util.internal.logging.InternalLoggerFactory
+import io.netty.util.internal.logging.JdkLoggerFactory
 
 class KtorHttpService: HttpService() {
 
-    private val server = embeddedServer(Netty, port = 12345) {
+    init {
+        InternalLoggerFactory.setDefaultFactory(JdkLoggerFactory.INSTANCE);
+    }
+
+    private val server = embeddedServer(Netty, port) {
         routing {
             get("/") {
                 call.respondText("Hello, world!")
@@ -16,8 +23,8 @@ class KtorHttpService: HttpService() {
         }
     }
 
-    override fun start(ipAddress: String) {
-        this.ipAddress = ipAddress
+    override fun start(host: String) {
+        super.start(host)
         server.start(wait = false)
     }
 

@@ -1,9 +1,17 @@
 package com.lsurvila.callmonitortask.service.http
 
+import com.lsurvila.callmonitortask.util.NetworkUtil
+import java.net.URI
+
+
 abstract class HttpService {
 
-    var ipAddress: String? = null
+    internal val port = 12345
+    lateinit var address: URI
 
-    abstract fun start(ipAddress: String)
+    open fun start(host: String) {
+        this.address = NetworkUtil.buildHttpAddress(host, port)
+    }
+
     abstract fun stop()
 }

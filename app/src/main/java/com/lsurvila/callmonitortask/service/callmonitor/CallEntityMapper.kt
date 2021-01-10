@@ -17,7 +17,7 @@ class CallEntityMapper {
     }
 
     private fun mapIsIncomingCall(state: Int, callDetails: Call.Details) =
-        if (VersionUtil.isQ()) {
+        if (VersionUtil.isQOrLater()) {
             callDetails.callDirection == Call.Details.DIRECTION_INCOMING
         } else {
             state == Call.STATE_RINGING

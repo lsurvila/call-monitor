@@ -83,7 +83,7 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
     }
 
     private fun askForPhonePermission() {
-        if (VersionUtil.isQ()) {
+        if (VersionUtil.isQOrLater()) {
             askForPhoneRole()
         } else {
             askForPhonePackage()
@@ -125,8 +125,8 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
         return true
     }
 
-    private fun showSetPhonePermission() {
-        if (VersionUtil.isN()) {
+    private fun openDefaultAppSettings() {
+        if (VersionUtil.isNOrLater()) {
             openDefaultAppsSettings()
         } else {
             openAppSettings()
@@ -160,7 +160,7 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
                 true
             }
             R.id.phone_permission_item -> {
-                showSetPhonePermission()
+                openDefaultAppSettings()
                 true
             }
             R.id.contacts_permission_item -> {

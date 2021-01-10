@@ -23,12 +23,12 @@ import org.koin.dsl.module
 
 val appModule = module {
     single { CallEntityMapper() }
-    if (VersionUtil.isQ()) {
+    if (VersionUtil.isQOrLater()) {
         single<RoleManager?> { androidContext().getSystemService() }
     }
     single<TelecomManager?> {androidContext().getSystemService() }
     single {
-        if (VersionUtil.isQ()) {
+        if (VersionUtil.isQOrLater()) {
             RoleCallMonitorService(get(), get())
         } else {
             PackageCallMonitorService(get(), get())

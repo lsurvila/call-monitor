@@ -41,7 +41,7 @@ class ViewStateMapper {
             )
             State.STARTED -> CallMonitorViewState(
                 serviceSwitchChecked = true,
-                consoleMessage = "Started on ${serviceState.ipAddress}".withDateTime()
+                consoleMessage = "Started on ${serviceState.address}".withDateTime()
             )
             State.STOPPING -> CallMonitorViewState(
                 serviceSwitchChecked = false,

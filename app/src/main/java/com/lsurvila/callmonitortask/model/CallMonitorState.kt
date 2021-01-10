@@ -1,5 +1,7 @@
 package com.lsurvila.callmonitortask.model
 
+import java.net.URI
+
 enum class State {
     NOT_STARTED,
     STARTING,
@@ -16,4 +18,4 @@ enum class State {
     WIFI_IP_FAILED_TO_RESOLVE
 }
 
-data class CallMonitorState(val state: State, val ipAddress: String? = null)
+data class CallMonitorState(val state: State, val address: URI? = null)
