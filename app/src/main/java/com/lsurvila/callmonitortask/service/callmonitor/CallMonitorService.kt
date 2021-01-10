@@ -3,6 +3,7 @@ package com.lsurvila.callmonitortask.service.callmonitor
 import com.lsurvila.callmonitortask.model.Call
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.PhoneState
+import com.lsurvila.callmonitortask.model.State
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,10 +39,14 @@ abstract class CallMonitorService {
         listener?.onRejectCall()
     }
 
-    private var _serviceState = MutableStateFlow(CallMonitorState.NOT_STARTED)
+    private var _serviceState = MutableStateFlow(CallMonitorState(State.NOT_STARTED))
 
     fun serviceState(): StateFlow<CallMonitorState> {
         return _serviceState.asStateFlow()
+    }
+
+    fun setServiceState(state: State) {
+        _serviceState.value = CallMonitorState(state)
     }
 
     fun setServiceState(state: CallMonitorState) {

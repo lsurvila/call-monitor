@@ -1,6 +1,6 @@
 package com.lsurvila.callmonitortask.model
 
-enum class CallMonitorState {
+enum class State {
     NOT_STARTED,
     STARTING,
     PHONE_PERMISSION_NEEDED,
@@ -15,3 +15,5 @@ enum class CallMonitorState {
     WIFI_DISCONNECTED,
     WIFI_IP_FAILED_TO_RESOLVE
 }
+
+data class CallMonitorState(val state: State, val ipAddress: String? = null)

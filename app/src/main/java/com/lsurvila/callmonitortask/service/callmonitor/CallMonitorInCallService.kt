@@ -1,13 +1,10 @@
-package com.lsurvila.callmonitortask.service.callmonitor.incall
+package com.lsurvila.callmonitortask.service.callmonitor
 
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.telecom.Call
 import android.telecom.InCallService
 import android.telecom.VideoProfile
-import com.lsurvila.callmonitortask.service.callmonitor.CallEntityMapper
-import com.lsurvila.callmonitortask.service.callmonitor.CallIntentListener
-import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 import com.lsurvila.callmonitortask.ui.CallMonitorActivity
 import org.koin.android.ext.android.inject
 
@@ -58,7 +55,6 @@ class CallMonitorInCallService: InCallService(), CallIntentListener {
     }
 
     override fun onRejectCall() {
-        currentCall?.reject(Call.REJECT_REASON_DECLINED)
         currentCall?.disconnect()
     }
 }

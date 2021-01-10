@@ -1,34 +1,39 @@
 package com.lsurvila.callmonitortask
 
 import com.lsurvila.callmonitortask.model.CallMonitorState
+import com.lsurvila.callmonitortask.model.State
 import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
+import com.lsurvila.callmonitortask.service.http.HttpService
 import com.lsurvila.callmonitortask.service.network.NetworkService
 
-class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService,
-                              private val networkService: NetworkService) {
+class StartCallMonitorUseCase(
+    private val callMonitorService: CallMonitorService,
+    private val networkService: NetworkService,
+    private val httpService: HttpService
+) {
 
     fun checkIfAvailable() {
-        callMonitorService.setServiceState(CallMonitorState.STARTING)
+        callMonitorService.setServiceState(State.STARTING)
         if (callMonitorService.isAvailable()) {
             if (callMonitorService.hasPhonePermission()) {
                 if (callMonitorService.hasContactsPermission()) {
                     startServer()
                 } else {
-                    callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_NEEDED)
+                    callMonitorService.setServiceState(State.CONTACTS_PERMISSION_NEEDED)
                 }
             } else {
-                callMonitorService.setServiceState(CallMonitorState.PHONE_PERMISSION_NEEDED)
+                callMonitorService.setServiceState(State.PHONE_PERMISSION_NEEDED)
             }
         } else {
-            handleServiceNotStarted(CallMonitorState.PHONE_NOT_AVAILABLE)
+            handleServiceNotStarted(State.PHONE_NOT_AVAILABLE)
         }
     }
 
     fun handlePhonePermission(permissionGranted: Boolean) {
         if (permissionGranted) {
-            callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_NEEDED)
+            callMonitorService.setServiceState(State.CONTACTS_PERMISSION_NEEDED)
         } else {
-            handleServiceNotStarted(CallMonitorState.PHONE_PERMISSION_DENIED)
+            handleServiceNotStarted(State.PHONE_PERMISSION_DENIED)
         }
     }
 
@@ -36,7 +41,7 @@ class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService
         if (permissionGranted) {
             startServer()
         } else {
-            handleServiceNotStarted(CallMonitorState.CONTACTS_PERMISSION_DENIED)
+            handleServiceNotStarted(State.CONTACTS_PERMISSION_DENIED)
         }
     }
 
@@ -44,17 +49,18 @@ class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService
         if (networkService.isWifiConnected()) {
             val ipAddress = networkService.getWifiIpAddress()
             if (ipAddress != null) {
-                callMonitorService.setServiceState(CallMonitorState.STARTED)
+                httpService.start(ipAddress)
+                callMonitorService.setServiceState(CallMonitorState(State.STARTED, httpService.ipAddress))
             } else {
-                handleServiceNotStarted(CallMonitorState.WIFI_IP_FAILED_TO_RESOLVE)
+                handleServiceNotStarted(State.WIFI_IP_FAILED_TO_RESOLVE)
             }
         } else {
-            handleServiceNotStarted(CallMonitorState.WIFI_DISCONNECTED)
+            handleServiceNotStarted(State.WIFI_DISCONNECTED)
         }
     }
 
-    private fun handleServiceNotStarted(reasonState: CallMonitorState) {
+    private fun handleServiceNotStarted(reasonState: State) {
         callMonitorService.setServiceState(reasonState)
-        callMonitorService.setServiceState(CallMonitorState.NOT_STARTED)
+        callMonitorService.setServiceState(State.NOT_STARTED)
     }
 }

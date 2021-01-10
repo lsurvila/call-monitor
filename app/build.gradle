@@ -17,7 +17,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    packagingOptions {
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/io.netty.versions.properties'
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -45,7 +48,7 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$ktx_activity_version"
 
     implementation "pub.devrel:easypermissions:$easy_permissions_version"
-    implementation "io.ktor:ktor-server-cio:$ktor_version"
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "com.jraska:console:$console_version"
 
     testImplementation "junit:junit:$junit_version"

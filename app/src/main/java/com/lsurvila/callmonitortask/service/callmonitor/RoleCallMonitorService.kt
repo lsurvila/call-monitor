@@ -1,4 +1,4 @@
-package com.lsurvila.callmonitortask.service.callmonitor.incall
+package com.lsurvila.callmonitortask.service.callmonitor
 
 import android.Manifest
 import android.app.role.RoleManager
