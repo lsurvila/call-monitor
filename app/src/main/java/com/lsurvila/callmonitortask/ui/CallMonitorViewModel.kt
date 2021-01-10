@@ -28,16 +28,29 @@ class CallMonitorViewModel(
     fun onServiceSwitched(isSwitchedByUser: Boolean, isSWitchedOn: Boolean) {
         if (isSwitchedByUser) {
             if (isSWitchedOn) {
-                startService()
+                checkForPhonePermission()
             } else {
                 stopService()
             }
         }
     }
-
-    fun startService(permissionGranted: Boolean = false) {
+    
+    private fun checkForPhonePermission() {
         startCallMonitorUseCase.checkIfAvailable()
     }
+
+    fun onPhonePermissionGranted(permissionGranted: Boolean) {
+        startCallMonitorUseCase.handlePhonePermission(permissionGranted)
+    }
+
+    fun onContactsPermissionGranted(permissionGranted: Boolean) {
+        startCallMonitorUseCase.handleContactPermission(permissionGranted)
+    }
+
+    fun onContactsPermissionDenied() {
+        startCallMonitorUseCase.handleContactPermissionDenied()
+    }
+
 
     fun stopService(withWarning: Boolean = false) {
         val serviceState = stopCallMonitorUseCase.execute(withWarning)
@@ -47,12 +60,6 @@ class CallMonitorViewModel(
     private fun updateViewState(serviceState: CallMonitorState) {
         val viewState = mapper.map(serviceState)
         _service.value = viewState
-    }
-
-    fun onStart() {
-        val serviceState = getCallMonitorStateUseCase.execute()
-//        val viewState = mapper.mapOnlyToggleState(serviceState)
-//        _service.value = viewState
     }
 
     fun onAnswerClicked() {

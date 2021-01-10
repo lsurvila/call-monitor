@@ -3,4 +3,7 @@
     <string name="call_monitor_switch">Call Monitor Switch</string>
     <string name="answer">Answer</string>
     <string name="reject">Reject</string>
+    <string name="set_phone_permission">Set Phone permission</string>
+    <string name="set_contacts_permission">Set Contacts permission</string>
+    <string name="contacts_rationale">Read contacts permission is required to identify phone numbers from contacts</string>
 </resources>

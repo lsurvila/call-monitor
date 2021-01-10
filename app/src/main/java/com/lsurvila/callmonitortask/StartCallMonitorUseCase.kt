@@ -8,24 +8,33 @@ class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService
     fun checkIfAvailable() {
         callMonitorService.setServiceState(CallMonitorState.STARTING)
         if (callMonitorService.isAvailable()) {
-            callMonitorService.setServiceState(CallMonitorState.AVAILABLE)
+            if (callMonitorService.hasPhonePermission()) {
+                callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_NEEDED)
+            } else {
+                callMonitorService.setServiceState(CallMonitorState.PHONE_PERMISSION_NEEDED)
+            }
         } else {
-            callMonitorService.setServiceState(CallMonitorState.NOT_AVAILABLE)
+            callMonitorService.setServiceState(CallMonitorState.PHONE_NOT_AVAILABLE)
         }
+    }
 
-//        if (callMonitorService._serviceState != CallMonitorState.STARTING) {
-//            if (callMonitorService.isAvailable()) {
-//                callMonitorService._serviceState = CallMonitorState.STARTING
-//            } else {
-//                callMonitorService._serviceState = CallMonitorState.NOT_AVAILABLE
-//            }
-//        } else {
-//            if (permissionGranted) {
-//                callMonitorService._serviceState = CallMonitorState.STARTED
-//            } else {
-//                callMonitorService._serviceState = CallMonitorState.PERMISSION_DENIED
-//            }
-//        }
-//        return callMonitorService._serviceState
+    fun handlePhonePermission(phonePermissionWasGranted: Boolean) {
+        if (phonePermissionWasGranted) {
+            callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_NEEDED)
+        } else {
+            callMonitorService.setServiceState(CallMonitorState.PHONE_PERMISSION_DENIED)
+        }
+    }
+
+    fun handleContactPermission(permissionGranted: Boolean) {
+        if (permissionGranted) {
+            callMonitorService.setServiceState(CallMonitorState.STARTED)
+        } else {
+            callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_REQUIRED)
+        }
+    }
+
+    fun handleContactPermissionDenied() {
+        callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_DENIED)
     }
 }

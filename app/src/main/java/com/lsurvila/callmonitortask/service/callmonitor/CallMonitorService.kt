@@ -38,7 +38,7 @@ abstract class CallMonitorService {
         listener?.onRejectCall()
     }
 
-    private var _serviceState = MutableStateFlow(CallMonitorState.IDLE)
+    private var _serviceState = MutableStateFlow(CallMonitorState.NOT_STARTED)
 
     fun serviceState(): StateFlow<CallMonitorState> {
         return _serviceState.asStateFlow()
@@ -49,4 +49,5 @@ abstract class CallMonitorService {
     }
 
     abstract fun isAvailable(): Boolean
+    abstract fun hasPhonePermission(): Boolean
 }

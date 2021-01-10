@@ -21,7 +21,7 @@ val appModule = module {
 
     single<RoleManager?> { androidContext().getSystemService() }
     single<TelecomManager?> {androidContext().getSystemService() }
-    single<CallMonitorService> { CallMonitorServiceImpl(get(), get()) }
+    single<CallMonitorService> { CallMonitorServiceImpl(get()) }
     single<ConnectivityManager?> { androidApplication().getSystemService() }
     single<NetworkService> { AndroidNetworkService(get()) }
 
