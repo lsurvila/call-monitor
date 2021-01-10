@@ -30,7 +30,7 @@ class CallEntityMapper {
     private fun mapState(state: Int): PhoneState {
         return when (state) {
             Call.STATE_RINGING -> PhoneState.INCOMING // incoming
-            Call.STATE_CONNECTING -> PhoneState.OUTCOMING // outgoing
+            Call.STATE_CONNECTING -> PhoneState.OUTGOING // outgoing
             Call.STATE_ACTIVE -> PhoneState.CONNECTED
             Call.STATE_DISCONNECTED -> PhoneState.DISCONNECTED
             else -> PhoneState.UNKNOWN

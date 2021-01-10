@@ -1,12 +1,9 @@
 package com.lsurvila.callmonitortask
 
-import android.util.Log
-import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.State
 import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 import com.lsurvila.callmonitortask.service.http.HttpService
 import com.lsurvila.callmonitortask.service.network.NetworkService
-import java.lang.Exception
 
 class StartCallMonitorUseCase(
     private val callMonitorService: CallMonitorService,
@@ -14,7 +11,7 @@ class StartCallMonitorUseCase(
     private val httpService: HttpService
 ) {
 
-    fun checkIfAvailable() {
+    suspend fun checkIfAvailable() {
         callMonitorService.setServiceState(State.STARTING)
         if (callMonitorService.isAvailable()) {
             if (callMonitorService.hasPhonePermission()) {
@@ -39,7 +36,7 @@ class StartCallMonitorUseCase(
         }
     }
 
-    fun handleContactPermission(permissionGranted: Boolean) {
+    suspend fun handleContactPermission(permissionGranted: Boolean) {
         if (permissionGranted) {
             startServer()
         } else {
@@ -47,18 +44,13 @@ class StartCallMonitorUseCase(
         }
     }
 
-    private fun startServer() {
+    private suspend fun startServer() {
         if (networkService.isWifiConnected()) {
             val wifiAddress = networkService.getWifiAddress(HttpService.PORT)
             if (wifiAddress != null) {
                 httpService.address = wifiAddress
-                try {
-                    httpService.start()
-                    callMonitorService.setServiceState(CallMonitorState(State.STARTED, httpService.address))
-                } catch (ex: Exception) {
-                    Log.e(HttpService.TAG, "Failed to run HTTP server", ex)
-                    handleServiceNotStarted(State.HTTP_SERVER_FAILED)
-                }
+                val state = httpService.start()
+                callMonitorService.setServiceState(state)
             } else {
                 handleServiceNotStarted(State.WIFI_IP_FAILED_TO_RESOLVE)
             }

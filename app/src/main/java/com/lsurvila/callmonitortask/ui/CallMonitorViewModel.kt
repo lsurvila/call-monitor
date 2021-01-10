@@ -1,8 +1,11 @@
 package com.lsurvila.callmonitortask.ui
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.lsurvila.callmonitortask.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class CallMonitorViewModel(
     private val viewCallMonitorStateUseCase: ViewCallMonitorStateUseCase,
@@ -23,29 +26,35 @@ class CallMonitorViewModel(
     }
 
     fun onServiceSwitched(isSwitchedByUser: Boolean, isSwitchedOn: Boolean) {
-        if (isSwitchedByUser) {
-            if (isSwitchedOn) {
-                onServiceSwitchedOn()
-            } else {
-                onServiceSwitchedOff()
+        viewModelScope.launch {
+            if (isSwitchedByUser) {
+                if (isSwitchedOn) {
+                    onServiceSwitchedOn()
+                } else {
+                    onServiceSwitchedOff()
+                }
             }
         }
     }
 
-    private fun onServiceSwitchedOff() {
+    private suspend fun onServiceSwitchedOff() {
         stopCallMonitorUseCase.execute()
     }
 
-    private fun onServiceSwitchedOn() {
+    private suspend fun onServiceSwitchedOn() {
         startCallMonitorUseCase.checkIfAvailable()
     }
 
     fun onPhonePermissionGranted(permissionGranted: Boolean) {
-        startCallMonitorUseCase.handlePhonePermission(permissionGranted)
+        viewModelScope.launch {
+            startCallMonitorUseCase.handlePhonePermission(permissionGranted)
+        }
     }
 
     fun onContactsPermissionGranted(permissionGranted: Boolean) {
-        startCallMonitorUseCase.handleContactPermission(permissionGranted)
+        viewModelScope.launch {
+            startCallMonitorUseCase.handleContactPermission(permissionGranted)
+        }
     }
 
     fun onAnswerClicked() {

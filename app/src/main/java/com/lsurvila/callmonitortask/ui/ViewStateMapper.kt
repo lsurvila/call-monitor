@@ -68,10 +68,6 @@ class ViewStateMapper {
                 isServiceSwitchChecked = false,
                 consoleMessage = "Failed to resolve Wifi IP address".withDateTime()
             )
-            State.HTTP_SERVER_FAILED -> CallMonitorViewState(
-                isServiceSwitchChecked = false,
-                consoleMessage = "Error while running HTTP server. If error persists force kill and restart the app".withDateTime()
-            )
         }
     }
 
@@ -90,7 +86,7 @@ class ViewStateMapper {
                 isAnswerButtonEnabled = true,
                 isRejectButtonEnabled = true
             )
-            PhoneState.OUTCOMING -> CallMonitorViewState(
+            PhoneState.OUTGOING -> CallMonitorViewState(
                 consoleMessage = "Call connecting to ${call.number}...".withDateTime(),
                 isAnswerButtonEnabled = false,
                 isRejectButtonEnabled = true

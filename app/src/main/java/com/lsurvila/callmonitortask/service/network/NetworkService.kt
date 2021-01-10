@@ -4,5 +4,5 @@ import java.net.URI
 
 interface NetworkService {
     fun isWifiConnected(): Boolean
-    fun getWifiAddress(port: Int): URI?
+    suspend fun getWifiAddress(port: Int): URI?
 }
