@@ -34,7 +34,7 @@ val appModule = module {
     single<NetworkService> { AndroidNetworkService(get()) }
 
     factory { ViewCallMonitorStateUseCase(get()) }
-    factory { StartCallMonitorUseCase(get()) }
+    factory { StartCallMonitorUseCase(get(), get()) }
     factory { StopCallMonitorUseCase(get()) }
     factory { ViewPhoneStateUseCase(get()) }
     factory { AnswerPhoneCallUseCase(get()) }

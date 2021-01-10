@@ -2,15 +2,17 @@ package com.lsurvila.callmonitortask
 
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
+import com.lsurvila.callmonitortask.service.network.NetworkService
 
-class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService) {
+class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService,
+                              private val networkService: NetworkService) {
 
     fun checkIfAvailable() {
         callMonitorService.setServiceState(CallMonitorState.STARTING)
         if (callMonitorService.isAvailable()) {
             if (callMonitorService.hasPhonePermission()) {
                 if (callMonitorService.hasContactsPermission()) {
-                    callMonitorService.setServiceState(CallMonitorState.STARTED)
+                    startServer()
                 } else {
                     callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_NEEDED)
                 }
@@ -32,9 +34,17 @@ class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService
 
     fun handleContactPermission(permissionGranted: Boolean) {
         if (permissionGranted) {
-            callMonitorService.setServiceState(CallMonitorState.STARTED)
+            startServer()
         } else {
             handleServiceNotStarted(CallMonitorState.CONTACTS_PERMISSION_DENIED)
+        }
+    }
+
+    private fun startServer() {
+        if (networkService.isWifiConnected()) {
+            callMonitorService.setServiceState(CallMonitorState.STARTED)
+        } else {
+            handleServiceNotStarted(CallMonitorState.WIFI_DISCONNECTED)
         }
     }
 

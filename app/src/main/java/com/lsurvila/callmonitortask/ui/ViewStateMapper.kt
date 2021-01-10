@@ -27,29 +27,41 @@ class ViewStateMapper {
                 consoleMessage = "Starting...".withDateTime()
             )
             CallMonitorState.PHONE_NOT_AVAILABLE -> CallMonitorViewState(
+                serviceSwitchChecked = true,
                 consoleMessage = "Phone service is not available on this device".withDateTime()
             )
             CallMonitorState.PHONE_PERMISSION_NEEDED -> CallMonitorViewState(
+                serviceSwitchChecked = true,
                 askForPhonePermission = true
             )
-            CallMonitorState.PHONE_PERMISSION_DENIED -> CallMonitorViewState(
-                consoleMessage = "Phone permission was denied. You can set it manually in app settings".withDateTime()
-            )
             CallMonitorState.CONTACTS_PERMISSION_NEEDED -> CallMonitorViewState(
+                serviceSwitchChecked = true,
                 askForContactsPermission = true
-            )
-            CallMonitorState.CONTACTS_PERMISSION_DENIED -> CallMonitorViewState(
-                consoleMessage = "Contacts permission was denied. You can set it manually in app settings".withDateTime()
             )
             CallMonitorState.STARTED -> CallMonitorViewState(
                 serviceSwitchChecked = true,
                 consoleMessage = "Started".withDateTime()
             )
             CallMonitorState.STOPPING -> CallMonitorViewState(
+                serviceSwitchChecked = false,
                 consoleMessage = "Stopping...".withDateTime()
             )
             CallMonitorState.STOPPED -> CallMonitorViewState(
+                serviceSwitchChecked = false,
                 consoleMessage = "Stopped. If you wish to restore Phone and Contacts permissions, you can do it in app settings".withDateTime()
+            )
+            // Error states
+            CallMonitorState.PHONE_PERMISSION_DENIED -> CallMonitorViewState(
+                serviceSwitchChecked = false,
+                consoleMessage = "Phone permission was denied. You can set it manually in app settings".withDateTime()
+            )
+            CallMonitorState.CONTACTS_PERMISSION_DENIED -> CallMonitorViewState(
+                serviceSwitchChecked = false,
+                consoleMessage = "Contacts permission was denied. You can set it manually in app settings".withDateTime()
+            )
+            CallMonitorState.WIFI_DISCONNECTED -> CallMonitorViewState(
+                serviceSwitchChecked = false,
+                consoleMessage = "Service requires active Wifi connection, currently it's offline".withDateTime()
             )
         }
     }
