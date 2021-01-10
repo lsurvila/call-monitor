@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlinx-serialization'
     id 'koin'
 }
 
@@ -49,6 +50,7 @@ dependencies {
 
     implementation "pub.devrel:easypermissions:$easy_permissions_version"
     implementation "io.ktor:ktor-server-netty:$ktor_version"
+    implementation "io.ktor:ktor-serialization:$ktor_version"
     implementation "com.jraska:console:$console_version"
 
     testImplementation "junit:junit:$junit_version"
