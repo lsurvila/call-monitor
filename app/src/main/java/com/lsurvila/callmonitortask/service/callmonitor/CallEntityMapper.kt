@@ -12,7 +12,8 @@ class CallEntityMapper {
         return com.lsurvila.callmonitortask.model.Call(
             mapState(call.state),
             call.details.handle.schemeSpecificPart,
-            call.details.contactDisplayName
+            "" // TODO
+//            call.details.contactDisplayName
         )
     }
 
