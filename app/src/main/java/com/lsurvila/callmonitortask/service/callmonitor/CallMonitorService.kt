@@ -50,4 +50,5 @@ abstract class CallMonitorService {
 
     abstract fun isAvailable(): Boolean
     abstract fun hasPhonePermission(): Boolean
+    abstract fun hasContactsPermission(): Boolean
 }

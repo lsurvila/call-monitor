@@ -12,7 +12,6 @@ data class CallMonitorViewState(
     val serviceSwitchChecked: Boolean? = false,
     val consoleMessage: String? = null,
     val askForPhonePermission: Boolean? = null,
-    val checkForContactsPermission: Boolean? = null,
     val askForContactsPermission: Boolean? = null
 )
 
@@ -38,10 +37,6 @@ class ViewStateMapper {
                 consoleMessage = "Phone permission was denied. You can set it manually in app settings".withDateTime()
             )
             CallMonitorState.CONTACTS_PERMISSION_NEEDED -> CallMonitorViewState(
-                serviceSwitchChecked = true,
-                checkForContactsPermission = true
-            )
-            CallMonitorState.CONTACTS_PERMISSION_REQUIRED -> CallMonitorViewState(
                 serviceSwitchChecked = true,
                 askForContactsPermission = true
             )

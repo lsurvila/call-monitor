@@ -9,7 +9,11 @@ class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService
         callMonitorService.setServiceState(CallMonitorState.STARTING)
         if (callMonitorService.isAvailable()) {
             if (callMonitorService.hasPhonePermission()) {
-                callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_NEEDED)
+                if (callMonitorService.hasContactsPermission()) {
+                    callMonitorService.setServiceState(CallMonitorState.STARTED)
+                } else {
+                    callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_NEEDED)
+                }
             } else {
                 callMonitorService.setServiceState(CallMonitorState.PHONE_PERMISSION_NEEDED)
             }
@@ -18,8 +22,8 @@ class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService
         }
     }
 
-    fun handlePhonePermission(phonePermissionWasGranted: Boolean) {
-        if (phonePermissionWasGranted) {
+    fun handlePhonePermission(permissionGranted: Boolean) {
+        if (permissionGranted) {
             callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_NEEDED)
         } else {
             callMonitorService.setServiceState(CallMonitorState.PHONE_PERMISSION_DENIED)
@@ -30,11 +34,7 @@ class StartCallMonitorUseCase(private val callMonitorService: CallMonitorService
         if (permissionGranted) {
             callMonitorService.setServiceState(CallMonitorState.STARTED)
         } else {
-            callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_REQUIRED)
+            callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_DENIED)
         }
-    }
-
-    fun handleContactPermissionDenied() {
-        callMonitorService.setServiceState(CallMonitorState.CONTACTS_PERMISSION_DENIED)
     }
 }

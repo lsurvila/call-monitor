@@ -15,8 +15,6 @@ class CallMonitorViewModel(
     private val mapper: ViewStateMapper
 ) : ViewModel() {
 
-    private val _service = MutableLiveData<CallMonitorViewState>()
-
     fun service(): Flow<CallMonitorViewState> {
         return getCallMonitorStateUseCase.execute().map { mapper.map(it) }
     }
@@ -28,14 +26,14 @@ class CallMonitorViewModel(
     fun onServiceSwitched(isSwitchedByUser: Boolean, isSWitchedOn: Boolean) {
         if (isSwitchedByUser) {
             if (isSWitchedOn) {
-                checkForPhonePermission()
+                checkIfPhoneIsAvailable()
             } else {
-                stopService()
+
             }
         }
     }
     
-    private fun checkForPhonePermission() {
+    private fun checkIfPhoneIsAvailable() {
         startCallMonitorUseCase.checkIfAvailable()
     }
 
@@ -45,21 +43,6 @@ class CallMonitorViewModel(
 
     fun onContactsPermissionGranted(permissionGranted: Boolean) {
         startCallMonitorUseCase.handleContactPermission(permissionGranted)
-    }
-
-    fun onContactsPermissionDenied() {
-        startCallMonitorUseCase.handleContactPermissionDenied()
-    }
-
-
-    fun stopService(withWarning: Boolean = false) {
-        val serviceState = stopCallMonitorUseCase.execute(withWarning)
-        updateViewState(serviceState)
-    }
-
-    private fun updateViewState(serviceState: CallMonitorState) {
-        val viewState = mapper.map(serviceState)
-        _service.value = viewState
     }
 
     fun onAnswerClicked() {
