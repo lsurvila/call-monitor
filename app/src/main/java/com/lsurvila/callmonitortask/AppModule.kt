@@ -2,9 +2,7 @@ package com.lsurvila.callmonitortask
 
 import android.app.role.RoleManager
 import android.net.ConnectivityManager
-import android.os.Build
 import android.telecom.TelecomManager
-import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import com.lsurvila.callmonitortask.service.callmonitor.CallEntityMapper
 import com.lsurvila.callmonitortask.service.callmonitor.incall.RoleCallMonitorService
@@ -35,10 +33,10 @@ val appModule = module {
     single<ConnectivityManager?> { androidApplication().getSystemService() }
     single<NetworkService> { AndroidNetworkService(get()) }
 
-    factory { GetCallMonitorStateUseCase(get()) }
+    factory { ViewCallMonitorStateUseCase(get()) }
     factory { StartCallMonitorUseCase(get()) }
     factory { StopCallMonitorUseCase(get()) }
-    factory { GetPhoneStateUseCase(get()) }
+    factory { ViewPhoneStateUseCase(get()) }
     factory { AnswerPhoneCallUseCase(get()) }
     factory { RejectPhoneCallUseCase(get()) }
     factory { ViewStateMapper() }

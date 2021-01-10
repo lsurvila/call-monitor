@@ -19,45 +19,37 @@ class ViewStateMapper {
 
     fun map(serviceState: CallMonitorState): CallMonitorViewState {
         return when (serviceState) {
-            CallMonitorState.NOT_STARTED -> CallMonitorViewState()
+            CallMonitorState.NOT_STARTED -> CallMonitorViewState(
+                serviceSwitchChecked = false
+            )
             CallMonitorState.STARTING -> CallMonitorViewState(
                 serviceSwitchChecked = true,
                 consoleMessage = "Starting...".withDateTime()
             )
             CallMonitorState.PHONE_NOT_AVAILABLE -> CallMonitorViewState(
-                serviceSwitchChecked = false,
                 consoleMessage = "Phone service is not available on this device".withDateTime()
             )
             CallMonitorState.PHONE_PERMISSION_NEEDED -> CallMonitorViewState(
-                serviceSwitchChecked = true,
                 askForPhonePermission = true
             )
             CallMonitorState.PHONE_PERMISSION_DENIED -> CallMonitorViewState(
-                serviceSwitchChecked = false,
                 consoleMessage = "Phone permission was denied. You can set it manually in app settings".withDateTime()
             )
             CallMonitorState.CONTACTS_PERMISSION_NEEDED -> CallMonitorViewState(
-                serviceSwitchChecked = true,
                 askForContactsPermission = true
             )
             CallMonitorState.CONTACTS_PERMISSION_DENIED -> CallMonitorViewState(
-                serviceSwitchChecked = false,
                 consoleMessage = "Contacts permission was denied. You can set it manually in app settings".withDateTime()
             )
             CallMonitorState.STARTED -> CallMonitorViewState(
                 serviceSwitchChecked = true,
                 consoleMessage = "Started".withDateTime()
             )
-
             CallMonitorState.STOPPING -> CallMonitorViewState(
                 consoleMessage = "Stopping...".withDateTime()
             )
             CallMonitorState.STOPPED -> CallMonitorViewState(
-                consoleMessage = "Stopped".withDateTime()
-            )
-            CallMonitorState.STOPPED_WITH_WARNING -> CallMonitorViewState(
-                consoleMessage = "Stopped. If you wish to restore call screening to default app uninstall Call Monitor"
-                    .withDateTime()
+                consoleMessage = "Stopped. If you wish to restore Phone and Contacts permissions, you can do it in app settings".withDateTime()
             )
         }
     }

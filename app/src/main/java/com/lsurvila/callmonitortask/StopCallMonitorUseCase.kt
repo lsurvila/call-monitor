@@ -5,17 +5,9 @@ import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 
 class StopCallMonitorUseCase(private val callMonitorService: CallMonitorService) {
 
-    fun execute(withWarning: Boolean = false): CallMonitorState {
-//        if (callMonitorService._serviceState != CallMonitorState.STOPPING) {
-//            callMonitorService._serviceState = CallMonitorState.STOPPING
-//        } else {
-//            if (withWarning) {
-//                callMonitorService._serviceState = CallMonitorState.STOPPED_WITH_WARNING
-//            } else {
-//                callMonitorService._serviceState = CallMonitorState.STOPPED
-//            }
-//        }
-//        return callMonitorService._serviceState
-        return CallMonitorState.STOPPING
+    fun execute() {
+        callMonitorService.setServiceState(CallMonitorState.STOPPING)
+        callMonitorService.setServiceState(CallMonitorState.STOPPED)
+        callMonitorService.setServiceState(CallMonitorState.NOT_STARTED)
     }
 }
