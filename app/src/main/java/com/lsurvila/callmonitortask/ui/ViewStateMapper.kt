@@ -76,12 +76,12 @@ class ViewStateMapper {
                 isAnswerButtonEnabled = false,
                 isRejectButtonEnabled = false
             )
-            PhoneState.RINGING -> CallMonitorViewState(
+            PhoneState.INCOMING -> CallMonitorViewState(
                 consoleMessage = "Incoming call from ${call.number}...".withDateTime(),
                 isAnswerButtonEnabled = true,
                 isRejectButtonEnabled = true
             )
-            PhoneState.CONNECTING -> CallMonitorViewState(
+            PhoneState.OUTCOMING -> CallMonitorViewState(
                 consoleMessage = "Call connecting to ${call.number}...".withDateTime(),
                 isAnswerButtonEnabled = false,
                 isRejectButtonEnabled = true

@@ -2,8 +2,8 @@ package com.lsurvila.callmonitortask.model
 
 enum class PhoneState {
     IDLE,
-    RINGING,
-    CONNECTING,
+    INCOMING,
+    OUTCOMING,
     ACTIVE,
     DISCONNECTED,
     UNKNOWN,
