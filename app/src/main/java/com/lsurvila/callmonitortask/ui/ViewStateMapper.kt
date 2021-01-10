@@ -10,7 +10,7 @@ import java.util.*
 data class CallMonitorViewState(
     val isRejectButtonEnabled: Boolean? = null,
     val isAnswerButtonEnabled: Boolean? = null,
-    val serviceSwitchChecked: Boolean? = false,
+    val isServiceSwitchChecked: Boolean? = false,
     val consoleMessage: String? = null,
     val askForPhonePermission: Boolean? = null,
     val askForContactsPermission: Boolean? = null
@@ -21,55 +21,55 @@ class ViewStateMapper {
     fun map(serviceState: CallMonitorState): CallMonitorViewState {
         return when (serviceState.state) {
             State.NOT_STARTED -> CallMonitorViewState(
-                serviceSwitchChecked = false
+                isServiceSwitchChecked = false
             )
             State.STARTING -> CallMonitorViewState(
-                serviceSwitchChecked = true,
+                isServiceSwitchChecked = true,
                 consoleMessage = "Starting...".withDateTime()
             )
             State.PHONE_NOT_AVAILABLE -> CallMonitorViewState(
-                serviceSwitchChecked = true,
+                isServiceSwitchChecked = true,
                 consoleMessage = "Phone service is not available on this device".withDateTime()
             )
             State.PHONE_PERMISSION_NEEDED -> CallMonitorViewState(
-                serviceSwitchChecked = true,
+                isServiceSwitchChecked = true,
                 askForPhonePermission = true
             )
             State.CONTACTS_PERMISSION_NEEDED -> CallMonitorViewState(
-                serviceSwitchChecked = true,
+                isServiceSwitchChecked = true,
                 askForContactsPermission = true
             )
             State.STARTED -> CallMonitorViewState(
-                serviceSwitchChecked = true,
+                isServiceSwitchChecked = true,
                 consoleMessage = "Started on ${serviceState.address}".withDateTime()
             )
             State.STOPPING -> CallMonitorViewState(
-                serviceSwitchChecked = false,
+                isServiceSwitchChecked = false,
                 consoleMessage = "Stopping...".withDateTime()
             )
             State.STOPPED -> CallMonitorViewState(
-                serviceSwitchChecked = false,
+                isServiceSwitchChecked = false,
                 consoleMessage = "Stopped. If you wish to restore Phone and Contacts permissions, you can do it in app settings".withDateTime()
             )
             // Error states
             State.PHONE_PERMISSION_DENIED -> CallMonitorViewState(
-                serviceSwitchChecked = false,
+                isServiceSwitchChecked = false,
                 consoleMessage = "Phone permission was denied. You can set it manually in app settings".withDateTime()
             )
             State.CONTACTS_PERMISSION_DENIED -> CallMonitorViewState(
-                serviceSwitchChecked = false,
+                isServiceSwitchChecked = false,
                 consoleMessage = "Contacts permission was denied. You can set it manually in app settings".withDateTime()
             )
             State.WIFI_DISCONNECTED -> CallMonitorViewState(
-                serviceSwitchChecked = false,
+                isServiceSwitchChecked = false,
                 consoleMessage = "Service requires active Wifi connection, currently it's offline".withDateTime()
             )
             State.WIFI_IP_FAILED_TO_RESOLVE -> CallMonitorViewState(
-                serviceSwitchChecked = false,
+                isServiceSwitchChecked = false,
                 consoleMessage = "Failed to resolve Wifi IP address".withDateTime()
             )
             State.HTTP_SERVER_FAILED -> CallMonitorViewState(
-                serviceSwitchChecked = false,
+                isServiceSwitchChecked = false,
                 consoleMessage = "Error while running HTTP server. If error persists force kill and restart the app".withDateTime()
             )
         }

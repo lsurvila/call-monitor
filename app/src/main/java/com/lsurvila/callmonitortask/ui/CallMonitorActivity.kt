@@ -48,7 +48,7 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
         }
         lifecycleScope.launchWhenResumed {
             viewModel.service().collect { viewState ->
-                viewState.serviceSwitchChecked?.let { serviceToggle?.isChecked = it }
+                viewState.isServiceSwitchChecked?.let { serviceToggle?.isChecked = it }
                 viewState.consoleMessage?.let { Console.writeLine(it) }
                 viewState.askForPhonePermission?.let { askForPhonePermission() }
                 viewState.askForContactsPermission?.let { askForContactsPermission() }
