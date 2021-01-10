@@ -30,7 +30,7 @@ class CallEntityMapper {
         return when (state) {
             Call.STATE_RINGING -> PhoneState.INCOMING // incoming
             Call.STATE_CONNECTING -> PhoneState.OUTCOMING // outgoing
-            Call.STATE_ACTIVE -> PhoneState.ACTIVE
+            Call.STATE_ACTIVE -> PhoneState.CONNECTED
             Call.STATE_DISCONNECTED -> PhoneState.DISCONNECTED
             else -> PhoneState.UNKNOWN
         }

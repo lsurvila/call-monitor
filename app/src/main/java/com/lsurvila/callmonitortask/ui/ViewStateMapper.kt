@@ -86,7 +86,7 @@ class ViewStateMapper {
                 isAnswerButtonEnabled = false,
                 isRejectButtonEnabled = true
             )
-            PhoneState.ACTIVE -> CallMonitorViewState(
+            PhoneState.CONNECTED -> CallMonitorViewState(
                 consoleMessage = "Call connected...".withDateTime(),
                 isAnswerButtonEnabled = false,
                 isRejectButtonEnabled = true,
