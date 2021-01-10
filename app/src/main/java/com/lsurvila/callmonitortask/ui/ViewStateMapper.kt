@@ -70,7 +70,7 @@ class ViewStateMapper {
             )
             State.HTTP_SERVER_FAILED -> CallMonitorViewState(
                 serviceSwitchChecked = false,
-                consoleMessage = "Error while running HTTP server. If error persists restart the app".withDateTime()
+                consoleMessage = "Error while running HTTP server. If error persists force kill and restart the app".withDateTime()
             )
         }
     }
