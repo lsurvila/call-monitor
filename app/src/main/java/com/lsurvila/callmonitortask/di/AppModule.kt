@@ -15,26 +15,45 @@ import com.lsurvila.callmonitortask.service.callmonitor.RoleCallMonitorService
 import com.lsurvila.callmonitortask.service.callmonitor.PackageCallMonitorService
 import com.lsurvila.callmonitortask.service.http.HttpService
 import com.lsurvila.callmonitortask.service.http.KtorHttpService
+import com.lsurvila.callmonitortask.service.http.mapper.ServicesMapper
+import com.lsurvila.callmonitortask.service.http.mapper.UriMapper
 import com.lsurvila.callmonitortask.service.network.AndroidNetworkService
 import com.lsurvila.callmonitortask.service.network.NetworkService
 import com.lsurvila.callmonitortask.ui.CallMonitorViewModel
 import com.lsurvila.callmonitortask.ui.ViewStateMapper
-import com.lsurvila.callmonitortask.util.VersionUtil
+import com.lsurvila.callmonitortask.ui.DateTimeMapper
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    single<ContentResolver> { androidContext().contentResolver }
-    single { ContactEntityMapper() }
-    single<ContactRepository> { ResolverContactRepository(get(), get()) }
+    // Use Cases (by App UI user)
+    factory { ViewCallMonitorStateUseCase(get()) }
+    factory { StartCallMonitorUseCase(get(), get(), get()) }
+    factory { StopCallMonitorUseCase(get(), get()) }
+    factory { ViewPhoneStateUseCase(get()) }
+    factory { AnswerPhoneCallUseCase(get()) }
+    factory { RejectPhoneCallUseCase(get()) }
+    // Use Cases (by HTTP API user)
+    factory { ViewServicesStatusUseCase(get()) }
 
-    single { CallEntityMapper() }
-    if (VersionUtil.isQOrLater()) {
-        single<RoleManager?> { androidContext().getSystemService() }
-    }
-    single<TelecomManager?> {androidContext().getSystemService() }
+    // Entity to Domain mappers
+    factory { ContactEntityMapper() }
+    factory { CallEntityMapper() }
+    // Domain to UI/HTTP mappers
+    factory { UriMapper() }
+    factory { DateTimeMapper() }
+    factory { ViewStateMapper(get()) }
+    factory { ServicesMapper(get(), get()) }
+
+    // App UI
+    viewModel { CallMonitorViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    // HTTP API
+    single<HttpService> { KtorHttpService(get()) }
+
+    // Repositories and Services
+    single<ContactRepository> { ResolverContactRepository(get(), get()) }
     single {
         if (VersionUtil.isQOrLater()) {
             RoleCallMonitorService(get(), get())
@@ -42,18 +61,14 @@ val appModule = module {
             PackageCallMonitorService(get(), get())
         }
     }
+    single<NetworkService> { AndroidNetworkService(get(), get(), get()) }
+
+    // Android Infrastructure
+    single<ContentResolver> { androidContext().contentResolver }
+    if (VersionUtil.isQOrLater()) {
+        single<RoleManager?> { androidContext().getSystemService() }
+    }
+    single<TelecomManager?> {androidContext().getSystemService() }
     single<ConnectivityManager?> { androidApplication().getSystemService() }
     single<WifiManager?> { androidApplication().getSystemService() }
-    single<NetworkService> { AndroidNetworkService(get(), get()) }
-    single<HttpService> { KtorHttpService() }
-
-    factory { ViewCallMonitorStateUseCase(get()) }
-    factory { StartCallMonitorUseCase(get(), get(), get()) }
-    factory { StopCallMonitorUseCase(get(), get()) }
-    factory { ViewPhoneStateUseCase(get()) }
-    factory { AnswerPhoneCallUseCase(get()) }
-    factory { RejectPhoneCallUseCase(get()) }
-    factory { LogOngoingCallUseCase(get()) }
-    factory { ViewStateMapper() }
-    viewModel { CallMonitorViewModel(get(), get(), get(), get(), get(), get(), get()) }
 }

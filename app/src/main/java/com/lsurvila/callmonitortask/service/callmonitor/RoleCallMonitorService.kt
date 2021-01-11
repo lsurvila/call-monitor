@@ -5,7 +5,6 @@ import android.app.role.RoleManager
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 import pub.devrel.easypermissions.EasyPermissions
 
 @RequiresApi(Build.VERSION_CODES.Q)

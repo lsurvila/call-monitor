@@ -1,9 +1,8 @@
 package com.lsurvila.callmonitortask.service.http
 
+import com.lsurvila.callmonitortask.ViewServicesStatusUseCase
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.State
-import com.lsurvila.callmonitortask.service.http.model.Service
-import com.lsurvila.callmonitortask.service.http.model.Services
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -13,12 +12,11 @@ import io.ktor.server.cio.*
 import io.ktor.server.engine.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-private const val METHOD_ROOT = "/"
-
-class KtorHttpService : HttpService() {
+class KtorHttpService(viewServicesStatusUseCase: ViewServicesStatusUseCase) : HttpService(viewServicesStatusUseCase) {
 
     private var server: ApplicationEngine? = null
 
@@ -27,13 +25,8 @@ class KtorHttpService : HttpService() {
             json()
         }
         routing {
-            get(METHOD_ROOT) {
-                call.respond(
-                    Services(
-                        "adasd",
-                        listOf(Service("asd", "asdas"), Service("asd", "s"))
-                    )
-                )
+            get(Methods.SERVICES.value) {
+                call.respond(getAvailableServices())
             }
         }
     }
@@ -41,8 +34,12 @@ class KtorHttpService : HttpService() {
     override suspend fun start(): CallMonitorState {
         return withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
+                // ideally we could reuse instance, but had problems with restarting and getting
+                // callbacks correctly, even with enough time to let it stop and using shutdown
+                // hooks. Something to improve
                 server = createServerInstance()
                 server?.environment?.monitor?.subscribe(ApplicationStarted) {
+                    serverStarted = Date()
                     continuation.resume(CallMonitorState(State.STARTED, address))
                 }
                 server?.start(wait = false)

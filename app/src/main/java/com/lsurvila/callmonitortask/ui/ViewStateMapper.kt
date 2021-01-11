@@ -4,7 +4,6 @@ import com.lsurvila.callmonitortask.model.Call
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.PhoneState
 import com.lsurvila.callmonitortask.model.State
-import com.lsurvila.callmonitortask.util.DateTimeUtil
 import java.util.*
 
 data class CallMonitorViewState(
@@ -16,7 +15,7 @@ data class CallMonitorViewState(
     val askForContactsPermission: Boolean? = null
 )
 
-class ViewStateMapper {
+class ViewStateMapper(private val dateTimeMapper: DateTimeMapper) {
 
     fun map(serviceState: CallMonitorState): CallMonitorViewState {
         return when (serviceState.state) {
@@ -72,7 +71,7 @@ class ViewStateMapper {
     }
 
     private fun String.withDateTime(): String {
-        return "${DateTimeUtil.formatDateTime(Date())}: $this"
+        return "${dateTimeMapper.mapDateTime(Date())}: $this"
     }
 
     fun mapFromPhoneCall(call: Call): CallMonitorViewState {

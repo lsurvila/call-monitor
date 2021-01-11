@@ -4,7 +4,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.util.Log
-import com.lsurvila.callmonitortask.util.NetworkUtil
+import com.lsurvila.callmonitortask.service.http.mapper.UriMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.math.BigInteger
@@ -17,7 +17,8 @@ private const val TAG = "NetworkService"
 
 class AndroidNetworkService(
     private val connectivityManager: ConnectivityManager?,
-    private val wifiService: WifiManager
+    private val wifiService: WifiManager,
+    private val uriMapper: UriMapper,
 ) : NetworkService {
 
     override fun isWifiConnected(): Boolean {
@@ -42,7 +43,7 @@ class AndroidNetworkService(
             try {
                 @Suppress("BlockingMethodInNonBlockingContext") // taken care withContext
                 val host = InetAddress.getByAddress(ipByteArray).hostAddress
-                address = NetworkUtil.buildHttpAddress(host, port)
+                address = uriMapper.mapHttpAddress(host, port)
             } catch (ex: UnknownHostException) {
                 Log.e(TAG, "Failed to resolve ip address", ex)
             }

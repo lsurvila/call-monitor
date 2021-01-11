@@ -40,13 +40,14 @@ dependencies {
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
 
-    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
     implementation "com.google.android.material:material:$material_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
     implementation "androidx.activity:activity-ktx:$ktx_activity_version"
 
-    implementation "pub.devrel:easypermissions:$easy_permissions_version"
     implementation "io.ktor:ktor-server-cio:$ktor_version"
     implementation "io.ktor:ktor-serialization:$ktor_version"
+
+    implementation "pub.devrel:easypermissions:$easy_permissions_version"
     implementation "com.jraska:console:$console_version"
 
     testImplementation "junit:junit:$junit_version"

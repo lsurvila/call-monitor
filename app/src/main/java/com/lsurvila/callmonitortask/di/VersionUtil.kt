@@ -1,4 +1,4 @@
-package com.lsurvila.callmonitortask.util
+package com.lsurvila.callmonitortask.di
 
 import android.os.Build
 

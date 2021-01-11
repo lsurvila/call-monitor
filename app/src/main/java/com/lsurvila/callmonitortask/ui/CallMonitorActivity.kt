@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.jraska.console.Console
 import com.lsurvila.callmonitortask.R
 import com.lsurvila.callmonitortask.databinding.ActivityCallMonitorBinding
-import com.lsurvila.callmonitortask.util.VersionUtil
+import com.lsurvila.callmonitortask.di.VersionUtil
 import kotlinx.coroutines.flow.collect
 import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -38,7 +38,7 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
         super.onCreate(savedInstanceState)
         val binding = ActivityCallMonitorBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        lifecycleScope.launchWhenResumed {
+        lifecycleScope.launchWhenCreated {
             viewModel.phone().collect { viewState ->
                 currentIsCallButtonEnabled = viewState.isAnswerButtonEnabled
                 currentIsRejectButtonEnabled = viewState.isRejectButtonEnabled
@@ -46,7 +46,7 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
                 viewState.consoleMessage?.let { Console.writeLine(it) }
             }
         }
-        lifecycleScope.launchWhenResumed {
+        lifecycleScope.launchWhenCreated {
             viewModel.service().collect { viewState ->
                 viewState.isServiceSwitchChecked?.let { serviceToggle?.isChecked = it }
                 viewState.consoleMessage?.let { Console.writeLine(it) }
