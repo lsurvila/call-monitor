@@ -1,5 +1,6 @@
 package com.lsurvila.callmonitortask.service.http
 
+import com.lsurvila.callmonitortask.ViewOngoingCallUseCase
 import com.lsurvila.callmonitortask.ViewServicesStatusUseCase
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.State
@@ -12,6 +13,7 @@ import io.ktor.server.cio.*
 import io.ktor.server.engine.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import java.util.*
 import kotlin.coroutines.resume
@@ -23,14 +25,20 @@ class KtorHttpService : HttpService() {
 
     private fun createServerInstance() = embeddedServer(CIO, PORT) {
         install(ContentNegotiation) {
-            json()
+            json(Json {
+                encodeDefaults = false
+            })
         }
 
         val viewServicesStatusUseCase: ViewServicesStatusUseCase by inject()
+        val viewOngoingCallUseCase: ViewOngoingCallUseCase by inject()
 
         routing {
             get(Methods.SERVICES.value) {
                 call.respond(viewServicesStatusUseCase.execute(serverStarted, enumValues(), address))
+            }
+            get(Methods.STATUS.value) {
+                call.respond(viewOngoingCallUseCase.execute())
             }
         }
     }

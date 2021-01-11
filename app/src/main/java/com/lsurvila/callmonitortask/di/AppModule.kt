@@ -15,6 +15,7 @@ import com.lsurvila.callmonitortask.service.callmonitor.RoleCallMonitorService
 import com.lsurvila.callmonitortask.service.callmonitor.PackageCallMonitorService
 import com.lsurvila.callmonitortask.service.http.HttpService
 import com.lsurvila.callmonitortask.service.http.KtorHttpService
+import com.lsurvila.callmonitortask.service.http.mapper.CallMapper
 import com.lsurvila.callmonitortask.service.http.mapper.ServicesMapper
 import com.lsurvila.callmonitortask.service.http.mapper.UriMapper
 import com.lsurvila.callmonitortask.service.network.AndroidNetworkService
@@ -37,6 +38,7 @@ val appModule = module {
     factory { RejectPhoneCallUseCase(get()) }
     // Use Cases (by HTTP API user)
     factory { ViewServicesStatusUseCase(get()) }
+    factory { ViewOngoingCallUseCase(get(), get(), get()) }
 
     // Entity to Domain mappers
     factory { ContactEntityMapper() }
@@ -46,6 +48,7 @@ val appModule = module {
     factory { DateTimeMapper() }
     factory { ViewStateMapper(get()) }
     factory { ServicesMapper(get(), get()) }
+    factory { CallMapper() }
 
     // App UI
     viewModel { CallMonitorViewModel(get(), get(), get(), get(), get(), get(), get()) }

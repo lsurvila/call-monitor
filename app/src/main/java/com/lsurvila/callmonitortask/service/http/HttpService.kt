@@ -4,7 +4,6 @@ import com.lsurvila.callmonitortask.model.CallMonitorState
 import java.net.URI
 import java.util.*
 
-@Suppress("unused")
 enum class Methods(val value: String) {
     SERVICES(""), // root
     STATUS("status"),
