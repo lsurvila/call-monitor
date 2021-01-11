@@ -49,7 +49,7 @@ class ViewStateMapper {
             )
             State.STOPPED -> CallMonitorViewState(
                 isServiceSwitchChecked = false,
-                consoleMessage = "Stopped. If you wish to restore Phone and Contacts permissions, you can do it in app settings".withDateTime()
+                consoleMessage = "Stopped. You can restore default Phone app in app settings".withDateTime()
             )
             // Error states
             State.PHONE_PERMISSION_DENIED -> CallMonitorViewState(
