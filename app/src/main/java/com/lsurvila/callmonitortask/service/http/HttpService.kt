@@ -1,6 +1,5 @@
 package com.lsurvila.callmonitortask.service.http
 
-import com.lsurvila.callmonitortask.ViewServicesStatusUseCase
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import java.net.URI
 import java.util.*
@@ -12,7 +11,7 @@ enum class Methods(val value: String) {
     LOG("log")
 }
 
-abstract class HttpService(private val viewServicesStatusUseCase: ViewServicesStatusUseCase) {
+abstract class HttpService {
 
     companion object {
         const val PORT = 12345
@@ -23,6 +22,4 @@ abstract class HttpService(private val viewServicesStatusUseCase: ViewServicesSt
 
     abstract suspend fun start(): CallMonitorState
     abstract suspend fun stop(): CallMonitorState
-
-    fun getAvailableServices() = viewServicesStatusUseCase.execute(serverStarted, enumValues(), address)
 }

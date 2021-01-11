@@ -50,7 +50,7 @@ val appModule = module {
     // App UI
     viewModel { CallMonitorViewModel(get(), get(), get(), get(), get(), get(), get()) }
     // HTTP API
-    single<HttpService> { KtorHttpService(get()) }
+    single<HttpService> { KtorHttpService() }
 
     // Repositories and Services
     single<ContactRepository> { ResolverContactRepository(get(), get()) }

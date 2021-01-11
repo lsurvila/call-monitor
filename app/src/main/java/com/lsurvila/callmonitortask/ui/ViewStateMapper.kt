@@ -96,7 +96,7 @@ class ViewStateMapper(private val dateTimeMapper: DateTimeMapper) {
                 isRejectButtonEnabled = true,
             )
             PhoneState.DISCONNECTED -> CallMonitorViewState(
-                consoleMessage = "Call ended.".withDateTime(),
+                consoleMessage = "Call ended".withDateTime(),
                 isAnswerButtonEnabled = false,
                 isRejectButtonEnabled = false
             )

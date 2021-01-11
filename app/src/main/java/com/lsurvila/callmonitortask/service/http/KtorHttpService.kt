@@ -12,11 +12,12 @@ import io.ktor.server.cio.*
 import io.ktor.server.engine.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.ktor.ext.inject
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class KtorHttpService(viewServicesStatusUseCase: ViewServicesStatusUseCase) : HttpService(viewServicesStatusUseCase) {
+class KtorHttpService : HttpService() {
 
     private var server: ApplicationEngine? = null
 
@@ -24,9 +25,12 @@ class KtorHttpService(viewServicesStatusUseCase: ViewServicesStatusUseCase) : Ht
         install(ContentNegotiation) {
             json()
         }
+
+        val viewServicesStatusUseCase: ViewServicesStatusUseCase by inject()
+
         routing {
             get(Methods.SERVICES.value) {
-                call.respond(getAvailableServices())
+                call.respond(viewServicesStatusUseCase.execute(serverStarted, enumValues(), address))
             }
         }
     }
