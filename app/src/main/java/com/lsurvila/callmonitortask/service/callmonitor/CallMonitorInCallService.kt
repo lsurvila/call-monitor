@@ -5,25 +5,21 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.telecom.Call
 import android.telecom.InCallService
 import android.telecom.VideoProfile
+import com.lsurvila.callmonitortask.LogOngoingCallUseCase
 import com.lsurvila.callmonitortask.ui.CallMonitorActivity
 import org.koin.android.ext.android.inject
 
-class CallMonitorInCallService: InCallService(), CallIntentListener {
+class CallMonitorInCallService : InCallService(), CallIntentListener {
 
-    private val callMonitorService: CallMonitorService by inject()
+    private val logOngoingCallUseCase: LogOngoingCallUseCase by inject()
     private val entityMapper: CallEntityMapper by inject()
 
     private var currentCall: Call? = null
-
-    init {
-        callMonitorService.setCallIntentListener(this)
-    }
 
     override fun onCallAdded(call: Call) {
         currentCall = call
         currentCall?.registerCallback(callCallback)
         updateOngoingCall(call)
-        openPhoneDialer()
     }
 
     override fun onCallRemoved(call: Call) {
@@ -40,10 +36,10 @@ class CallMonitorInCallService: InCallService(), CallIntentListener {
 
     private fun updateOngoingCall(call: Call) {
         val callData = entityMapper.map(call)
-        callMonitorService.setPhoneCall(callData)
+        logOngoingCallUseCase.execute(callData, this@CallMonitorInCallService)
     }
 
-    private fun openPhoneDialer() {
+    override fun onOpenPhone() {
         startActivity(
             Intent(this, CallMonitorActivity::class.java)
                 .setFlags(FLAG_ACTIVITY_NEW_TASK)

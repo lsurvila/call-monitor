@@ -9,13 +9,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 interface CallIntentListener {
+    fun onOpenPhone()
     fun onAnswerCall()
     fun onRejectCall()
 }
 
 abstract class CallMonitorService {
 
-    private val _phoneCall = MutableStateFlow(Call(PhoneState.IDLE, null, null))
+    private val _phoneCall = MutableStateFlow(Call(PhoneState.IDLE, null))
 
     private var listener: CallIntentListener? = null
 
@@ -27,7 +28,8 @@ abstract class CallMonitorService {
         return _phoneCall.asStateFlow()
     }
 
-    fun setPhoneCall(call: Call) {
+    fun logPhoneCall(call: Call) {
+        listener?.onOpenPhone()
         _phoneCall.value = call
     }
 

@@ -1,11 +1,15 @@
 package com.lsurvila.callmonitortask.di
 
 import android.app.role.RoleManager
+import android.content.ContentResolver
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.telecom.TelecomManager
 import androidx.core.content.getSystemService
 import com.lsurvila.callmonitortask.*
+import com.lsurvila.callmonitortask.repository.ContactEntityMapper
+import com.lsurvila.callmonitortask.repository.ContactRepository
+import com.lsurvila.callmonitortask.repository.ResolverContactRepository
 import com.lsurvila.callmonitortask.service.callmonitor.CallEntityMapper
 import com.lsurvila.callmonitortask.service.callmonitor.RoleCallMonitorService
 import com.lsurvila.callmonitortask.service.callmonitor.PackageCallMonitorService
@@ -22,6 +26,10 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
+    single<ContentResolver> { androidContext().contentResolver }
+    single { ContactEntityMapper() }
+    single<ContactRepository> { ResolverContactRepository(get(), get()) }
+
     single { CallEntityMapper() }
     if (VersionUtil.isQOrLater()) {
         single<RoleManager?> { androidContext().getSystemService() }
@@ -45,6 +53,7 @@ val appModule = module {
     factory { ViewPhoneStateUseCase(get()) }
     factory { AnswerPhoneCallUseCase(get()) }
     factory { RejectPhoneCallUseCase(get()) }
+    factory { LogOngoingCallUseCase(get()) }
     factory { ViewStateMapper() }
     viewModel { CallMonitorViewModel(get(), get(), get(), get(), get(), get(), get()) }
 }
