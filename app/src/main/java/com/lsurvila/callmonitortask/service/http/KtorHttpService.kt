@@ -1,5 +1,6 @@
 package com.lsurvila.callmonitortask.service.http
 
+import com.lsurvila.callmonitortask.ViewCallLogUseCase
 import com.lsurvila.callmonitortask.ViewOngoingCallUseCase
 import com.lsurvila.callmonitortask.ViewServicesStatusUseCase
 import com.lsurvila.callmonitortask.model.CallMonitorState
@@ -15,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
+import java.net.URI
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -23,7 +25,7 @@ class KtorHttpService : HttpService() {
 
     private var server: ApplicationEngine? = null
 
-    private fun createServerInstance() = embeddedServer(CIO, PORT) {
+    private fun createServerInstance() = embeddedServer(factory = CIO, port = PORT, host = address.host) {
         install(ContentNegotiation) {
             json(Json {
                 encodeDefaults = false
@@ -32,6 +34,7 @@ class KtorHttpService : HttpService() {
 
         val viewServicesStatusUseCase: ViewServicesStatusUseCase by inject()
         val viewOngoingCallUseCase: ViewOngoingCallUseCase by inject()
+        val viewCallLogUseCase: ViewCallLogUseCase by inject()
 
         routing {
             get(Methods.SERVICES.value) {
@@ -40,10 +43,14 @@ class KtorHttpService : HttpService() {
             get(Methods.STATUS.value) {
                 call.respond(viewOngoingCallUseCase.execute())
             }
+            get(Methods.LOG.value) {
+                call.respond(viewCallLogUseCase.execute())
+            }
         }
     }
 
-    override suspend fun start(): CallMonitorState {
+    override suspend fun start(address: URI): CallMonitorState {
+        this.address = address
         return withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
                 // ideally we could reuse instance, but had problems with restarting and getting

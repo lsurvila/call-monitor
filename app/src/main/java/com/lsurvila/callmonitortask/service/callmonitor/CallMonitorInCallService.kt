@@ -5,6 +5,7 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.telecom.Call
 import android.telecom.InCallService
 import android.telecom.VideoProfile
+import com.lsurvila.callmonitortask.model.PhoneState
 import com.lsurvila.callmonitortask.ui.CallMonitorActivity
 import org.koin.android.ext.android.inject
 
@@ -39,7 +40,9 @@ class CallMonitorInCallService : InCallService(), CallIntentListener {
 
     private fun updateOngoingCall(call: Call) {
         val callData = entityMapper.map(call)
-        callMonitorService.logPhoneCall(callData)
+        if (callData.state != PhoneState.UNKNOWN && callData.state != callMonitorService.phoneCall().value.state) {
+            callMonitorService.logPhoneCall(callData)
+        }
     }
 
     override fun onOpenPhone() {

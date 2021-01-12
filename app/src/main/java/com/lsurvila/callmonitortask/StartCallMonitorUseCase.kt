@@ -1,11 +1,13 @@
 package com.lsurvila.callmonitortask
 
 import com.lsurvila.callmonitortask.model.State
+import com.lsurvila.callmonitortask.repository.call.CallLogRepository
 import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 import com.lsurvila.callmonitortask.service.http.HttpService
 import com.lsurvila.callmonitortask.service.network.NetworkService
 
 class StartCallMonitorUseCase(
+    private val callLogRepository: CallLogRepository,
     private val callMonitorService: CallMonitorService,
     private val networkService: NetworkService,
     private val httpService: HttpService
@@ -48,9 +50,9 @@ class StartCallMonitorUseCase(
         if (networkService.isWifiConnected()) {
             val wifiAddress = networkService.getWifiAddress(HttpService.PORT)
             if (wifiAddress != null) {
-                httpService.address = wifiAddress
-                val state = httpService.start()
-                callMonitorService.setServiceState(state)
+                val started = httpService.start(wifiAddress)
+                callLogRepository.delete()
+                callMonitorService.setServiceState(started)
             } else {
                 handleServiceNotStarted(State.WIFI_IP_FAILED_TO_RESOLVE)
             }

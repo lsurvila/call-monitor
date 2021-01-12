@@ -5,10 +5,13 @@ import android.app.role.RoleManager
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.lsurvila.callmonitortask.repository.call.CallLogRepository
 import pub.devrel.easypermissions.EasyPermissions
 
 @RequiresApi(Build.VERSION_CODES.Q)
-class RoleCallMonitorService(private val roleManager: RoleManager?, private val context: Context): CallMonitorService() {
+class RoleCallMonitorService(private val roleManager: RoleManager?, private val context: Context,
+                             callLogRepository: CallLogRepository
+): CallMonitorService(callLogRepository) {
 
     override fun isAvailable(): Boolean {
         return roleManager?.isRoleAvailable(RoleManager.ROLE_DIALER) == true

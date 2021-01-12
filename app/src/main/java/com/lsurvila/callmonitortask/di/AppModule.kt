@@ -7,9 +7,11 @@ import android.net.wifi.WifiManager
 import android.telecom.TelecomManager
 import androidx.core.content.getSystemService
 import com.lsurvila.callmonitortask.*
-import com.lsurvila.callmonitortask.repository.ContactEntityMapper
-import com.lsurvila.callmonitortask.repository.ContactRepository
-import com.lsurvila.callmonitortask.repository.ResolverContactRepository
+import com.lsurvila.callmonitortask.repository.call.CallLogRepository
+import com.lsurvila.callmonitortask.repository.call.InMemoryCallLogRepository
+import com.lsurvila.callmonitortask.repository.contact.ContactEntityMapper
+import com.lsurvila.callmonitortask.repository.contact.ContactRepository
+import com.lsurvila.callmonitortask.repository.contact.ResolverContactRepository
 import com.lsurvila.callmonitortask.service.callmonitor.CallEntityMapper
 import com.lsurvila.callmonitortask.service.callmonitor.RoleCallMonitorService
 import com.lsurvila.callmonitortask.service.callmonitor.PackageCallMonitorService
@@ -31,14 +33,15 @@ import org.koin.dsl.module
 val appModule = module {
     // Use Cases (by App UI user)
     factory { ViewCallMonitorStateUseCase(get()) }
-    factory { StartCallMonitorUseCase(get(), get(), get()) }
-    factory { StopCallMonitorUseCase(get(), get()) }
+    factory { StartCallMonitorUseCase(get(), get(), get(), get()) }
+    factory { StopCallMonitorUseCase(get(), get(), get()) }
     factory { ViewPhoneStateUseCase(get()) }
     factory { AnswerPhoneCallUseCase(get()) }
     factory { RejectPhoneCallUseCase(get()) }
     // Use Cases (by HTTP API user)
     factory { ViewServicesStatusUseCase(get()) }
     factory { ViewOngoingCallUseCase(get(), get(), get()) }
+    factory { ViewCallLogUseCase(get(), get(), get()) }
 
     // Entity to Domain mappers
     factory { ContactEntityMapper() }
@@ -48,7 +51,7 @@ val appModule = module {
     factory { DateTimeMapper() }
     factory { ViewStateMapper(get()) }
     factory { ServicesMapper(get(), get()) }
-    factory { CallMapper() }
+    factory { CallMapper(get()) }
 
     // App UI
     viewModel { CallMonitorViewModel(get(), get(), get(), get(), get(), get(), get()) }
@@ -57,11 +60,12 @@ val appModule = module {
 
     // Repositories and Services
     single<ContactRepository> { ResolverContactRepository(get(), get()) }
+    single<CallLogRepository> { InMemoryCallLogRepository() }
     single {
         if (VersionUtil.isQOrLater()) {
-            RoleCallMonitorService(get(), get())
+            RoleCallMonitorService(get(), get(), get())
         } else {
-            PackageCallMonitorService(get(), get())
+            PackageCallMonitorService(get(), get(), get())
         }
     }
     single<NetworkService> { AndroidNetworkService(get(), get(), get()) }

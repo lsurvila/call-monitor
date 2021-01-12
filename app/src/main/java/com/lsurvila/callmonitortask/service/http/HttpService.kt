@@ -19,6 +19,6 @@ abstract class HttpService {
     lateinit var address: URI
     lateinit var serverStarted: Date
 
-    abstract suspend fun start(): CallMonitorState
+    abstract suspend fun start(address: URI): CallMonitorState
     abstract suspend fun stop(): CallMonitorState
 }

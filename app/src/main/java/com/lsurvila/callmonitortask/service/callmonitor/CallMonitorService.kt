@@ -4,9 +4,11 @@ import com.lsurvila.callmonitortask.model.Call
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.PhoneState
 import com.lsurvila.callmonitortask.model.State
+import com.lsurvila.callmonitortask.repository.call.CallLogRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.*
 
 interface CallIntentListener {
     fun onOpenPhone()
@@ -14,9 +16,11 @@ interface CallIntentListener {
     fun onRejectCall()
 }
 
-abstract class CallMonitorService {
+abstract class CallMonitorService(private val callLogRepository: CallLogRepository) {
 
-    private val _phoneCall = MutableStateFlow(Call(PhoneState.IDLE, null))
+    private val _phoneCall = MutableStateFlow(Call(PhoneState.IDLE, ""))
+    private var connectedTime: Date? = null
+    private var disconnectedTime: Date? = null
 
     private var listener: CallIntentListener? = null
 
@@ -31,6 +35,19 @@ abstract class CallMonitorService {
     fun logPhoneCall(call: Call) {
         listener?.onOpenPhone()
         _phoneCall.value = call
+        if (call.state == PhoneState.CONNECTED) {
+            connectedTime = Date()
+        } else if (call.state == PhoneState.DISCONNECTED) {
+            disconnectedTime = Date()
+            callLogRepository.insert(
+                call.copy(
+                    connectedTime = connectedTime,
+                    disconnectedTime = disconnectedTime
+                )
+            )
+            connectedTime = null
+            disconnectedTime = null
+        }
     }
 
     fun answerCall() {

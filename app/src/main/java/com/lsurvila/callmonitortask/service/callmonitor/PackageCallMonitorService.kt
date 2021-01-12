@@ -3,10 +3,12 @@ package com.lsurvila.callmonitortask.service.callmonitor
 import android.Manifest
 import android.content.Context
 import android.telecom.TelecomManager
-import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
+import com.lsurvila.callmonitortask.repository.call.CallLogRepository
 import pub.devrel.easypermissions.EasyPermissions
 
-class PackageCallMonitorService(private val telecomManager: TelecomManager?, private val context: Context): CallMonitorService() {
+class PackageCallMonitorService(private val telecomManager: TelecomManager?, private val context: Context,
+                                callLogRepository: CallLogRepository
+): CallMonitorService(callLogRepository) {
 
     override fun isAvailable(): Boolean {
         return telecomManager != null

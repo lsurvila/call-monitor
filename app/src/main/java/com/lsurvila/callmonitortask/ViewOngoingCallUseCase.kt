@@ -1,6 +1,6 @@
 package com.lsurvila.callmonitortask
 
-import com.lsurvila.callmonitortask.repository.ContactRepository
+import com.lsurvila.callmonitortask.repository.contact.ContactRepository
 import com.lsurvila.callmonitortask.service.callmonitor.CallMonitorService
 import com.lsurvila.callmonitortask.service.http.mapper.CallMapper
 import com.lsurvila.callmonitortask.service.http.model.OngoingCall
@@ -13,11 +13,7 @@ class ViewOngoingCallUseCase(
 
     suspend fun execute(): OngoingCall {
         val call = callMonitorService.phoneCall().value
-        val name = if (call.number != null) {
-            repository.getContactName(call.number)
-        } else {
-            null
-        }
+        val name = repository.query(call.number)
         return callMapper.map(call, name)
     }
 }
