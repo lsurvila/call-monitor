@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 class CallMapper {
 
-    fun map(call: Call, name: String?): OngoingCall {
+    fun mapOngoingCall(call: Call, name: String?): OngoingCall {
         return if (call.state == PhoneState.CONNECTED) {
             OngoingCall(true, call.number, name)
         } else {

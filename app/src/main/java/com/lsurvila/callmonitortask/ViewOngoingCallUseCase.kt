@@ -14,7 +14,7 @@ class ViewOngoingCallUseCase(
     suspend fun execute(): OngoingCall {
         val call = callMonitorService.phoneCall().value
         val name = repository.query(call.number)
-        val ongoingCall = callMapper.map(call, name)
+        val ongoingCall = callMapper.mapOngoingCall(call, name)
         if (ongoingCall.ongoing) {
             callMonitorService.logPhoneCallMonitored()
         }
