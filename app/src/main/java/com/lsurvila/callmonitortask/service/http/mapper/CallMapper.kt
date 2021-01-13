@@ -4,11 +4,11 @@ import com.lsurvila.callmonitortask.model.Call
 import com.lsurvila.callmonitortask.model.PhoneState
 import com.lsurvila.callmonitortask.service.http.model.LoggedCall
 import com.lsurvila.callmonitortask.service.http.model.OngoingCall
-import com.lsurvila.callmonitortask.ui.DateTimeMapper
+import com.lsurvila.callmonitortask.util.DateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class CallMapper(private val dateTimeMapper: DateTimeMapper) {
+class CallMapper {
 
     fun map(call: Call, name: String?): OngoingCall {
         return if (call.state == PhoneState.CONNECTED) {
@@ -35,6 +35,6 @@ class CallMapper(private val dateTimeMapper: DateTimeMapper) {
     }
 
     private fun mapBeginning(connectedTime: Date?): String {
-        return if (connectedTime != null) dateTimeMapper.mapDateTimeLong(connectedTime) else ""
+        return if (connectedTime != null) DateTime.formatLong(connectedTime) else ""
     }
 }

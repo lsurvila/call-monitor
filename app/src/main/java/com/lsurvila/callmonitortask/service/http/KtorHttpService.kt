@@ -5,6 +5,7 @@ import com.lsurvila.callmonitortask.ViewOngoingCallUseCase
 import com.lsurvila.callmonitortask.ViewServicesStatusUseCase
 import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.State
+import com.lsurvila.callmonitortask.util.DateTime
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -17,7 +18,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import java.net.URI
-import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -58,7 +58,7 @@ class KtorHttpService : HttpService() {
                 // hooks. Something to improve
                 server = createServerInstance()
                 server?.environment?.monitor?.subscribe(ApplicationStarted) {
-                    serverStarted = Date()
+                    serverStarted = DateTime.now()
                     continuation.resume(CallMonitorState(State.STARTED, address))
                 }
                 server?.start(wait = false)

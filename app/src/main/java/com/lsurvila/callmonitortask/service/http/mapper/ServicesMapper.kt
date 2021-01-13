@@ -3,14 +3,14 @@ package com.lsurvila.callmonitortask.service.http.mapper
 import com.lsurvila.callmonitortask.service.http.Methods
 import com.lsurvila.callmonitortask.service.http.model.Service
 import com.lsurvila.callmonitortask.service.http.model.Services
-import com.lsurvila.callmonitortask.ui.DateTimeMapper
+import com.lsurvila.callmonitortask.util.DateTime
 import java.net.URI
 import java.util.*
 
-class ServicesMapper(private val uriMapper: UriMapper, private val dateTimeMapper: DateTimeMapper) {
+class ServicesMapper(private val uriMapper: UriMapper) {
     fun map(serverStarted: Date, methods: Array<Methods>, address: URI): Services {
         return Services(
-            dateTimeMapper.mapDateTimeLong(serverStarted),
+            DateTime.formatLong(serverStarted),
             mapServices(methods, address)
         )
     }

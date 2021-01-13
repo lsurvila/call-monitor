@@ -5,6 +5,7 @@ import com.lsurvila.callmonitortask.model.CallMonitorState
 import com.lsurvila.callmonitortask.model.PhoneState
 import com.lsurvila.callmonitortask.model.State
 import com.lsurvila.callmonitortask.repository.call.CallLogRepository
+import com.lsurvila.callmonitortask.util.DateTime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,9 +38,9 @@ abstract class CallMonitorService(private val callLogRepository: CallLogReposito
         listener?.onOpenPhone()
         _phoneCall.value = call
         if (call.state == PhoneState.CONNECTED) {
-            callConnectedTime = Date()
+            callConnectedTime = DateTime.now()
         } else if (call.state == PhoneState.DISCONNECTED) {
-            callDisconnectedTime = Date()
+            callDisconnectedTime = DateTime.now()
             callLogRepository.insert(
                 call.copy(
                     connectedTime = callConnectedTime,

@@ -24,7 +24,6 @@ import com.lsurvila.callmonitortask.service.network.AndroidNetworkService
 import com.lsurvila.callmonitortask.service.network.NetworkService
 import com.lsurvila.callmonitortask.ui.CallMonitorViewModel
 import com.lsurvila.callmonitortask.ui.ViewStateMapper
-import com.lsurvila.callmonitortask.ui.DateTimeMapper
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
@@ -48,10 +47,9 @@ val appModule = module {
     factory { CallEntityMapper() }
     // Domain to UI/HTTP mappers
     factory { UriMapper() }
-    factory { DateTimeMapper() }
-    factory { ViewStateMapper(get()) }
-    factory { ServicesMapper(get(), get()) }
-    factory { CallMapper(get()) }
+    factory { ViewStateMapper() }
+    factory { ServicesMapper(get()) }
+    factory { CallMapper() }
 
     // App UI
     viewModel { CallMonitorViewModel(get(), get(), get(), get(), get(), get(), get()) }
