@@ -8,7 +8,7 @@ import java.util.*
 
 class ViewServicesStatusUseCase(private val mapper: ServicesMapper) {
 
-    fun execute(serverStarted: Date, methods: Array<Methods>, address: URI): Services {
-        return mapper.map(serverStarted, methods, address)
+    fun execute(serverStartedTime: Date, methods: Array<Methods>, address: URI): Services {
+        return mapper.map(serverStartedTime, methods, address)
     }
 }
