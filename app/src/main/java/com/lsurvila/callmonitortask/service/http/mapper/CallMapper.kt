@@ -24,7 +24,7 @@ class CallMapper(private val dateTimeMapper: DateTimeMapper) {
             mapDuration(call.connectedTime, call.disconnectedTime),
             call.number,
             name,
-            0
+            call.monitoredCount
         )
     }
 

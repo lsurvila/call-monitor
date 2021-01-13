@@ -19,8 +19,9 @@ interface CallIntentListener {
 abstract class CallMonitorService(private val callLogRepository: CallLogRepository) {
 
     private val _phoneCall = MutableStateFlow(Call(PhoneState.IDLE, ""))
-    private var connectedTime: Date? = null
-    private var disconnectedTime: Date? = null
+    private var callConnectedTime: Date? = null
+    private var callDisconnectedTime: Date? = null
+    private var callMonitoredCount = 0
 
     private var listener: CallIntentListener? = null
 
@@ -36,18 +37,24 @@ abstract class CallMonitorService(private val callLogRepository: CallLogReposito
         listener?.onOpenPhone()
         _phoneCall.value = call
         if (call.state == PhoneState.CONNECTED) {
-            connectedTime = Date()
+            callConnectedTime = Date()
         } else if (call.state == PhoneState.DISCONNECTED) {
-            disconnectedTime = Date()
+            callDisconnectedTime = Date()
             callLogRepository.insert(
                 call.copy(
-                    connectedTime = connectedTime,
-                    disconnectedTime = disconnectedTime
+                    connectedTime = callConnectedTime,
+                    disconnectedTime = callDisconnectedTime,
+                    monitoredCount = callMonitoredCount
                 )
             )
-            connectedTime = null
-            disconnectedTime = null
+            callConnectedTime = null
+            callDisconnectedTime = null
+            callMonitoredCount = 0
         }
+    }
+
+    fun logPhoneCallMonitored() {
+        callMonitoredCount++
     }
 
     fun answerCall() {

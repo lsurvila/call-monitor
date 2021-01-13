@@ -57,8 +57,10 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
     }
 
     private fun askForContactsPermission() {
-        EasyPermissions.requestPermissions(this, getString(R.string.contacts_rationale),
-            REQUEST_CONTACTS_PERMISSION, Manifest.permission.READ_CONTACTS)
+        EasyPermissions.requestPermissions(
+            this, getString(R.string.contacts_rationale),
+            REQUEST_CONTACTS_PERMISSION, Manifest.permission.READ_CONTACTS
+        )
     }
 
     override fun onRequestPermissionsResult(
@@ -104,7 +106,7 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
+        when (requestCode) {
             REQUEST_PHONE_PERMISSION -> viewModel.onPhonePermissionGranted(resultCode == RESULT_OK)
         }
     }

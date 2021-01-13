@@ -10,7 +10,7 @@ enum class State {
     STARTED,
     STOPPING,
     STOPPED,
-    // error state
+    // error states
     PHONE_NOT_AVAILABLE,
     PHONE_PERMISSION_DENIED,
     CONTACTS_PERMISSION_DENIED,
