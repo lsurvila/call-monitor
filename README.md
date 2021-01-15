@@ -16,7 +16,7 @@ Address and port will be printed out in the application</p>
 
 <p>Call Monitor server  API description is provided below:</p>
 
-## get__
+## GET /
 
 ```shell
 # You can also use wget
@@ -24,8 +24,6 @@ curl -X GET / \
   -H 'Accept: application/json'
 
 ```
-
-`GET /`
 
 *Show available services*
 
@@ -47,17 +45,11 @@ curl -X GET / \
 }
 ```
 
-<h3 id="get__-responses">Responses</h3>
-
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Show available services|[Services](#schemaservices)|
 
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-## get__status
+## GET /status
 
 ```shell
 # You can also use wget
@@ -65,8 +57,6 @@ curl -X GET /status \
   -H 'Accept: application/json'
 
 ```
-
-`GET /status`
 
 *Shows data on the current call status*
 
@@ -80,17 +70,11 @@ curl -X GET /status \
 }
 ```
 
-<h3 id="get__status-responses">Responses</h3>
-
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Shows data on the current call status|[OngoingCall](#schemaongoingcall)|
 
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-## get__log
+## GET /log
 
 ```shell
 # You can also use wget
@@ -98,8 +82,6 @@ curl -X GET /log \
   -H 'Accept: application/json'
 
 ```
-
-`GET /log`
 
 *Shows data on previous calls since server was started*
 
@@ -124,15 +106,9 @@ curl -X GET /log \
 ]
 ```
 
-<h3 id="get__log-responses">Responses</h3>
-
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Shows data on previous calls since server was started|[LoggedCall](#schemaloggedcall)|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
 
 # Schemas
 
