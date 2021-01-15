@@ -14,7 +14,7 @@ User can restore default phone app in default app settings, Call Monitor also pr
 printed out in the app. If service successfully starts it will launch http server, which can be accessed from the same Wifi network.
 Address and port will be printed out in the application</p>
 
-![plot](./screenshot.png)
+![plot](./screenshot.png){width=50%}
 
 <p>Call Monitor server  API description is provided below:</p>
 
