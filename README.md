@@ -1,6 +1,4 @@
-<!-- Generator: Widdershins v4.0.1 -->
-
-<h1 id="call-monitor">Call Monitor v1.0.0</h1>
+<h1 id="call-monitor">Call Monitor</h1>
 
 <p>Android application that allows call monitoring (API 23+). To start monitoring toggle switch in top right. 
 Application requires be set as default phone application and requires read-contacts permission.
