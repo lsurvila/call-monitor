@@ -19,7 +19,6 @@ Address and port will be printed out in the application</p>
 ## GET /
 
 ```shell
-# You can also use wget
 curl -X GET / \
   -H 'Accept: application/json'
 
@@ -52,7 +51,6 @@ curl -X GET / \
 ## GET /status
 
 ```shell
-# You can also use wget
 curl -X GET /status \
   -H 'Accept: application/json'
 
@@ -77,7 +75,6 @@ curl -X GET /status \
 ## GET /log
 
 ```shell
-# You can also use wget
 curl -X GET /log \
   -H 'Accept: application/json'
 
