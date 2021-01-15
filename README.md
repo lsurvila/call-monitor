@@ -94,14 +94,14 @@ curl -X GET /log \
     "duration": "498",
     "number": "+12025550203",
     "name": "Jane Doe",
-    "timesQuiried": 5
+    "timesQueried": 5
   },
   {
     "beginning": "2018-05-01T09:00:00+00:00",
     "duration": "721",
     "number": "+12025550108",
     "name": "John Doe",
-    "timesQuiried": 0
+    "timesQueried": 0
   }
 ]
 ```
@@ -198,7 +198,7 @@ curl -X GET /log \
   "duration": "string",
   "number": "string",
   "name": "string",
-  "timesQuiried": 0
+  "timesQueried": 0
 }
 
 ```
@@ -211,5 +211,5 @@ curl -X GET /log \
 |duration|string|true|none|Duration of the call in seconds|
 |number|string|true|none|Number to which call was connected to|
 |name|string|false|none|Name of the contact user is conncected if number is in users' contact list, null otherwise|
-|timesQuiried|integer|true|none|How many times call (when active) was monitored with /status endpoint|
+|timesQueried|integer|true|none|How many times call (when active) was monitored with /status endpoint|
 
