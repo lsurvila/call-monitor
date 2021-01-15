@@ -183,7 +183,7 @@ curl -X GET /log \
 |---|---|---|---|---|
 |ongoing|boolean|true|none|True if call is active, false if ringing, connecting, disconnected, etc|
 |number|string|false|none|Phone number user is connected to, null if call is not ongoing/active|
-|name|string|false|none|Name of the contact user is conncected if number is in users' contact list and call is ongoing/active, null otherwise|
+|name|string|false|none|Name of the contact user is connected if number is in users' contact list and call is ongoing/active, null otherwise|
 
 <h2 id="tocS_LoggedCall">LoggedCall</h2>
 <!-- backwards compatibility -->
@@ -210,6 +210,6 @@ curl -X GET /log \
 |beginning|string|true|none|Time when call got connected|
 |duration|string|true|none|Duration of the call in seconds|
 |number|string|true|none|Number to which call was connected to|
-|name|string|false|none|Name of the contact user is conncected if number is in users' contact list, null otherwise|
+|name|string|false|none|Name of the contact user is connected if number is in users' contact list, null otherwise|
 |timesQueried|integer|true|none|How many times call (when active) was monitored with /status endpoint|
 
