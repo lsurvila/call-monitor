@@ -31,6 +31,7 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
     private val viewModel: CallMonitorViewModel by viewModel()
     private var serviceToggle: SwitchCompat? = null
 
+    private var currentIsServiceToggleChecked: Boolean? = null
     private var currentIsCallButtonEnabled: Boolean? = null
     private var currentIsRejectButtonEnabled: Boolean? = null
 
@@ -48,10 +49,13 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
         }
         lifecycleScope.launchWhenCreated {
             viewModel.service().collect { viewState ->
-                viewState.isServiceSwitchChecked?.let { serviceToggle?.isChecked = it }
+                viewState.isServiceSwitchChecked?.let {
+                    currentIsServiceToggleChecked = it
+                    serviceToggle?.isChecked = it
+                }
                 viewState.consoleMessage?.let { Console.writeLine(it) }
-                viewState.askForPhonePermission?.let { askForPhonePermission() }
-                viewState.askForContactsPermission?.let { askForContactsPermission() }
+                viewState.askForPhonePermission?.let { if (it) askForPhonePermission() }
+                viewState.askForContactsPermission?.let { if (it) askForContactsPermission() }
             }
         }
     }
@@ -121,6 +125,7 @@ class CallMonitorActivity : AppCompatActivity(), EasyPermissions.PermissionCallb
         menuInflater.inflate(R.menu.menu_call_monitor, menu)
         serviceToggle =
             menu.findItem(R.id.switch_item).actionView.findViewById(R.id.callMonitorSwitch)
+        serviceToggle?.isChecked = currentIsServiceToggleChecked == true
         serviceToggle?.setOnCheckedChangeListener { button, isChecked ->
             viewModel.onServiceSwitched(button.isPressed, isChecked)
         }
